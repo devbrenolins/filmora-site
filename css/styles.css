@@ -303,6 +303,9 @@ em{font-style:italic}
 .gal__tile{break-inside:avoid;margin:0 0 clamp(.7rem,1.4vw,1.1rem);padding:0;width:100%;display:block;
   position:relative;overflow:hidden;border:none;border-radius:6px;cursor:zoom-in;
   background:var(--bg-2);appearance:none}
+/* Dois caminhos para a altura, de propósito: o aspect-ratio no tile (Safari 15+)
+   e, com height:auto, a proporção que a própria img deduz de width/height
+   (Safari 14+). Se um não valer, o outro segura, e o tile nunca fica com 0px. */
 .gal__tile img{width:100%;height:auto;transition:transform .65s var(--ease)}
 .gal__tile::after{content:"";position:absolute;inset:0;background:rgba(10,8,6,0);transition:background .5s}
 .gal__tile:hover img{transform:scale(1.04)}

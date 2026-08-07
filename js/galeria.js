@@ -23,18 +23,50 @@ if (!album || !album.fotos.length) {
 
   count.textContent = `${fotos.length} fotos`;
 
+  /* Cada tile nasce com o espaço da foto já reservado (aspect-ratio + width/height).
+     Sem isso o tile tem altura zero até a imagem chegar, e uma imagem de altura
+     zero nunca entra em viewport: ela nunca carrega, nunca ganha altura. O Safari
+     trava exatamente nesse impasse; o Chrome carrega assim mesmo e disfarça. */
   function render() {
     const ate = Math.min(mostradas + LOTE, fotos.length);
-    const html = fotos.slice(mostradas, ate).map((n, i) => `
+    const html = fotos.slice(mostradas, ate).map(([arq, w, h], i) => `
       <button class="gal__tile" data-i="${mostradas + i}" type="button"
+        style="aspect-ratio:${w}/${h}"
         aria-label="Abrir foto ${mostradas + i + 1} de ${fotos.length}">
-        <img src="${thumbURL(dir, n)}" alt="${album.titulo}, foto ${mostradas + i + 1}"
-          loading="lazy" decoding="async">
+        <img data-src="${thumbURL(dir, arq)}" width="${w}" height="${h}"
+          alt="${album.titulo}, foto ${mostradas + i + 1}" decoding="async">
       </button>`).join("");
     grid.insertAdjacentHTML("beforeend", html);
+    observar();
     mostradas = ate;
     more.hidden = mostradas >= fotos.length;
     more.textContent = `Carregar mais ${Math.min(LOTE, fotos.length - mostradas)} fotos`;
+  }
+
+  /* Carregamento sob demanda por IntersectionObserver, em vez do loading="lazy"
+     nativo, que é o que falha no Safari dentro de layout em colunas. */
+  const carregar = (img) => {
+    if (!img.dataset.src) return;
+    img.src = img.dataset.src;
+    delete img.dataset.src;
+  };
+  const io = "IntersectionObserver" in window
+    ? new IntersectionObserver((ents) => {
+        ents.forEach((e) => {
+          if (e.isIntersecting) { carregar(e.target); io.unobserve(e.target); }
+        });
+      }, { rootMargin: "600px 0px" })
+    : null;
+  function observar() {
+    const pendentes = $$("#galGrid img[data-src]");
+    if (!io) { pendentes.forEach(carregar); return; }
+    pendentes.forEach((img) => io.observe(img));
+    /* Rede de segurança: se o observer não disparar por qualquer motivo, as
+       fotos entram assim mesmo. São ~50 miniaturas de 54 KB numa página cujo
+       propósito é justamente mostrá-las; melhor pesar um pouco que ficar em
+       branco, que foi o defeito que trouxe a gente até aqui. */
+    clearTimeout(observar.rede);
+    observar.rede = setTimeout(() => $$("#galGrid img[data-src]").forEach(carregar), 2500);
   }
 
   render();
@@ -58,10 +90,10 @@ if (!album || !album.fotos.length) {
     setTimeout(() => {
       const im = new Image();
       im.onload = () => { lbImg.src = im.src; requestAnimationFrame(() => (lbImg.style.opacity = 1)); };
-      im.src = fullURL(dir, fotos[idx]);
+      im.src = fullURL(dir, fotos[idx][0]);
     }, 200);
-    preload(fullURL(dir, fotos[(idx + 1) % fotos.length]));
-    preload(fullURL(dir, fotos[(idx - 1 + fotos.length) % fotos.length]));
+    preload(fullURL(dir, fotos[(idx + 1) % fotos.length][0]));
+    preload(fullURL(dir, fotos[(idx - 1 + fotos.length) % fotos.length][0]));
   }
   function open(i) {
     idx = i; show();

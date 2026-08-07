@@ -163,7 +163,9 @@ def baixar_imagem(fid, largura):
 
 
 def gravar_par(dados, dir_full, dir_thumb, nome):
-    """Grava a versão grande e gera a miniatura, ambas em WebP."""
+    """Grava a versão grande e gera a miniatura, ambas em WebP.
+    Devolve (largura, altura) da miniatura: o site precisa disso para
+    reservar o espaço de cada foto antes dela carregar."""
     from PIL import Image
     import io
 
@@ -174,6 +176,13 @@ def gravar_par(dados, dir_full, dir_thumb, nome):
     if prop < 1:
         im = im.resize((LARGURA_THUMB, round(im.height * prop)), Image.LANCZOS)
     im.save(dir_thumb / nome, "WEBP", quality=QUALIDADE, method=6)
+    return im.width, im.height
+
+
+def medir(caminho):
+    from PIL import Image
+    with Image.open(caminho) as im:
+        return im.width, im.height
 
 
 def sincronizar_fotos(slug, ids):
@@ -192,22 +201,24 @@ def sincronizar_fotos(slug, ids):
     nomes, novos, falhas = [], 0, []
     for i, fid in enumerate(ids, 1):
         nome = f"{i:03d}.webp"
-        nomes.append(nome)
         ja_tem = (manifesto.get(nome) == fid
                   and (dir_full / nome).exists() and (dir_thumb / nome).exists())
         if ja_tem:
+            nomes.append([nome, *medir(dir_thumb / nome)])
             continue
         dados = baixar_imagem(fid, LARGURA_GRANDE)
         if not dados:
             falhas.append(fid)
             continue
-        gravar_par(dados, dir_full, dir_thumb, nome)
+        w, h = gravar_par(dados, dir_full, dir_thumb, nome)
+        nomes.append([nome, w, h])
         manifesto[nome] = fid
         novos += 1
 
     # limpa sobras de quando o álbum tinha mais fotos
+    validos = {n[0] for n in nomes}
     for arq in list(dir_full.iterdir()) + list(dir_thumb.iterdir()):
-        if arq.name not in nomes:
+        if arq.name not in validos:
             arq.unlink()
             manifesto.pop(arq.name, None)
     manifesto_arq.write_text(json.dumps(manifesto, indent=2), encoding="utf-8")
