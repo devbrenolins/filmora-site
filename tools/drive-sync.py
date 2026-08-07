@@ -139,6 +139,18 @@ def titulo_video(nome):
                     for p in base.split())
 
 
+def versao_assets():
+    """Hash curto de CSS+JS. Vira ?v=<hash> nos links das páginas geradas, para
+    o navegador não servir versão velha de cache depois de um deploy."""
+    import hashlib
+    h = hashlib.sha1()
+    for rel in ("css/styles.css", "js/galeria.js", "js/galerias-data.js"):
+        arq = RAIZ / rel
+        if arq.exists():
+            h.update(arq.read_bytes())
+    return h.hexdigest()[:8]
+
+
 def escapar(t):
     return (t.replace("&", "&amp;").replace("<", "&lt;")
              .replace(">", "&gt;").replace('"', "&quot;"))
@@ -280,7 +292,7 @@ def bloco_vlb(alb):
 """
 
 
-def pagina(alb):
+def pagina(alb, VERSAO):
     """HTML estático de uma página de galeria."""
     titulo = escapar(alb["titulo"])
     desc = escapar(alb["descricao"])
@@ -300,7 +312,7 @@ def pagina(alb):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Prata&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/css/styles.css?v={VERSAO}">
 <script>
   (function(){{
     var t = 'light';
@@ -372,8 +384,8 @@ def pagina(alb):
   <figure class="lb__stage"><img id="lbImg" src="" alt=""></figure>
 </div>
 {bloco_vlb(alb)}
-<script src="/js/galerias-data.js"></script>
-<script src="/js/galeria.js"></script>
+<script src="/js/galerias-data.js?v={VERSAO}"></script>
+<script src="/js/galeria.js?v={VERSAO}"></script>
 </body>
 </html>
 """
@@ -381,6 +393,7 @@ def pagina(alb):
 
 def main():
     dados = {}
+    paginas_pendentes = []
     for alb in ALBUNS:
         if not alb["pasta"]:
             print(f"  · {alb['slug']}: sem pasta do Drive, pulando", file=sys.stderr)
@@ -407,7 +420,7 @@ def main():
 
         destino = RAIZ / "galeria" / f"{alb['slug']}.html"
         destino.parent.mkdir(exist_ok=True)
-        destino.write_text(pagina(alb), encoding="utf-8")
+        paginas_pendentes.append((destino, alb))
 
     urls = "".join(
         f"\n  <url><loc>/galeria/{s}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>"
@@ -442,7 +455,12 @@ def main():
         "window.COBERTURA = " + json.dumps(videos, ensure_ascii=False, indent=2) + ";\n",
         encoding="utf-8",
     )
-    total = sum(len(v["fotos"]) for v in dados.values())
+    v = versao_assets()
+    for destino, alb in paginas_pendentes:
+        destino.parent.mkdir(exist_ok=True)
+        destino.write_text(pagina(alb, v), encoding="utf-8")
+
+    total = sum(len(v2["fotos"]) for v2 in dados.values())
     print(f"→ {saida.relative_to(RAIZ)} · {len(dados)} álbuns · {total} fotos", file=sys.stderr)
 
 

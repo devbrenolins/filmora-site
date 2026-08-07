@@ -14,37 +14,63 @@ const album = (window.GALERIAS || {})[slug];
 
 const grid = $("#galGrid"), more = $("#galMore"), count = $("#galCount");
 
-if (!album || !album.fotos.length) {
-  count.textContent = "Galeria em preparação.";
-} else {
+function montarGaleria() {
   const fotos = album.fotos;
   const dir = album.dir;
   let mostradas = 0;
 
   count.textContent = `${fotos.length} fotos`;
 
-  /* Cada tile nasce com o espaço da foto já reservado (aspect-ratio + width/height).
-     Sem isso o tile tem altura zero até a imagem chegar, e uma imagem de altura
-     zero nunca entra em viewport: ela nunca carrega, nunca ganha altura. O Safari
-     trava exatamente nesse impasse; o Chrome carrega assim mesmo e disfarça. */
-  function render() {
-    const ate = Math.min(mostradas + LOTE, fotos.length);
-    const html = fotos.slice(mostradas, ate).map(([arq, w, h], i) => `
-      <button class="gal__tile" data-i="${mostradas + i}" type="button"
-        style="aspect-ratio:${w}/${h}"
-        aria-label="Abrir foto ${mostradas + i + 1} de ${fotos.length}">
-        <img data-src="${thumbURL(dir, arq)}" width="${w}" height="${h}"
-          alt="${album.titulo}, foto ${mostradas + i + 1}" decoding="async">
-      </button>`).join("");
-    grid.insertAdjacentHTML("beforeend", html);
+  /* O mosaico é montado com flexbox: uma <div> por coluna, as fotos distribuídas
+     na coluna mais curta. Antes era CSS multi-column, que o WebKit até o Safari 16
+     pinta errado quando há imagem dentro — era esse o defeito do iOS 16. Flexbox
+     não tem fragmentação, então não há o que dar errado. */
+  const colunasAgora = () => (innerWidth <= 560 ? 1 : innerWidth <= 1000 ? 2 : 3);
+  let colunasMontadas = 0;
+
+  const tile = ([arq, w, h], i) => `
+    <button class="gal__tile" data-i="${i}" type="button"
+      style="aspect-ratio:${w}/${h}"
+      aria-label="Abrir foto ${i + 1} de ${fotos.length}">
+      <img data-src="${thumbURL(dir, arq)}" width="${w}" height="${h}"
+        alt="${album.titulo}, foto ${i + 1}" decoding="async">
+    </button>`;
+
+  function montar() {
+    const n = colunasAgora();
+    colunasMontadas = n;
+    const colunas = Array.from({ length: n }, () => []);
+    const altura = new Array(n).fill(0);
+    fotos.slice(0, mostradas).forEach((foto, i) => {
+      let menor = 0;
+      for (let c = 1; c < n; c++) if (altura[c] < altura[menor]) menor = c;
+      colunas[menor].push(tile(foto, i));
+      altura[menor] += foto[2] / foto[1];      // altura relativa à largura da coluna
+    });
+    grid.innerHTML = colunas
+      .map((c) => `<div class="gal__col">${c.join("")}</div>`)
+      .join("");
     observar();
-    mostradas = ate;
+  }
+
+  function render() {
+    mostradas = Math.min(mostradas + LOTE, fotos.length);
+    montar();
     more.hidden = mostradas >= fotos.length;
     more.textContent = `Carregar mais ${Math.min(LOTE, fotos.length - mostradas)} fotos`;
   }
 
+  /* remonta só quando o número de colunas muda, para não recarregar imagem à toa */
+  let tempoResize;
+  addEventListener("resize", () => {
+    clearTimeout(tempoResize);
+    tempoResize = setTimeout(() => {
+      if (colunasAgora() !== colunasMontadas) montar();
+    }, 200);
+  });
+
   /* Carregamento sob demanda por IntersectionObserver, em vez do loading="lazy"
-     nativo, que é o que falha no Safari dentro de layout em colunas. */
+     nativo, que o Safari 15.4 a 16 trata com heurística estrita demais. */
   const carregar = (img) => {
     if (!img.dataset.src) return;
     img.src = img.dataset.src;
@@ -61,10 +87,7 @@ if (!album || !album.fotos.length) {
     const pendentes = $$("#galGrid img[data-src]");
     if (!io) { pendentes.forEach(carregar); return; }
     pendentes.forEach((img) => io.observe(img));
-    /* Rede de segurança: se o observer não disparar por qualquer motivo, as
-       fotos entram assim mesmo. São ~50 miniaturas de 54 KB numa página cujo
-       propósito é justamente mostrá-las; melhor pesar um pouco que ficar em
-       branco, que foi o defeito que trouxe a gente até aqui. */
+    /* rede de segurança: se o observer não disparar, as fotos entram assim mesmo */
     clearTimeout(observar.rede);
     observar.rede = setTimeout(() => $$("#galGrid img[data-src]").forEach(carregar), 2500);
   }
@@ -95,13 +118,13 @@ if (!album || !album.fotos.length) {
     preload(fullURL(dir, fotos[(idx + 1) % fotos.length][0]));
     preload(fullURL(dir, fotos[(idx - 1 + fotos.length) % fotos.length][0]));
   }
-  function open(i) {
+  function abrirFoto(i) {
     idx = i; show();
     lb.classList.add("is-open");
     lb.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
   }
-  function close() {
+  function fecharFoto() {
     lb.classList.remove("is-open");
     lb.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
@@ -110,17 +133,17 @@ if (!album || !album.fotos.length) {
 
   grid.addEventListener("click", (e) => {
     const tile = e.target.closest(".gal__tile");
-    if (tile) open(Number(tile.dataset.i));
+    if (tile) abrirFoto(Number(tile.dataset.i));
   });
-  $("#lbClose").addEventListener("click", close);
+  $("#lbClose").addEventListener("click", fecharFoto);
   $("#lbPrev").addEventListener("click", () => step(-1));
   $("#lbNext").addEventListener("click", () => step(1));
   lb.addEventListener("click", (e) => {
-    if (e.target === lb || e.target === lbImg.parentElement) close();
+    if (e.target === lb || e.target === lbImg.parentElement) fecharFoto();
   });
   addEventListener("keydown", (e) => {
     if (!lb.classList.contains("is-open")) return;
-    if (e.key === "Escape") close();
+    if (e.key === "Escape") fecharFoto();
     if (e.key === "ArrowRight") step(1);
     if (e.key === "ArrowLeft") step(-1);
   });
@@ -132,9 +155,18 @@ if (!album || !album.fotos.length) {
   }, { passive: true });
 }
 
+/* Cada recurso da página roda isolado: uma falha no mosaico não pode levar junto
+   o vídeo e o menu, que vêm depois no arquivo. Foi assim que um erro só apareceu
+   como dois defeitos distintos. */
+function protegido(nome, fn) {
+  try { fn(); } catch (e) { console.error(`[filmora] ${nome}:`, e); }
+}
+
+
 /* ── filme do álbum (YouTube, no lightbox de vídeo) ── */
-const filme = $(".galfilme"), vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
-if (filme && vlb) {
+function montarFilme() {
+  const filme = $(".galfilme"), vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
+  if (!filme || !vlb) return;
   const yt = filme.dataset.yt;
   const abrir = () => {
     const origin = location.protocol.startsWith("http")
@@ -163,17 +195,30 @@ if (filme && vlb) {
 }
 
 /* ── nav (mesmo comportamento da home) ── */
-const nav = $("#nav");
-addEventListener("scroll", () => nav.classList.toggle("is-scrolled", scrollY > 40), { passive: true });
-$("#burger").addEventListener("click", () => {
-  const open = nav.classList.toggle("is-open");
-  document.body.style.overflow = open ? "hidden" : "";
-});
-const root = document.documentElement;
-$("#themeToggle").addEventListener("click", () => {
-  const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-  root.setAttribute("data-theme", next);
-  try { localStorage.setItem("filmora-theme", next); } catch (e) {}
-  document.querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", next === "dark" ? "#110f0c" : "#f7f4ef");
-});
+function montarNav() {
+  const nav = $("#nav");
+  addEventListener("scroll", () => nav.classList.toggle("is-scrolled", scrollY > 40), { passive: true });
+  $("#burger").addEventListener("click", () => {
+    const aberto = nav.classList.toggle("is-open");
+    document.body.style.overflow = aberto ? "hidden" : "";
+  });
+  const root = document.documentElement;
+  $("#themeToggle").addEventListener("click", () => {
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("filmora-theme", next); } catch (e) {}
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", next === "dark" ? "#110f0c" : "#f7f4ef");
+  });
+}
+
+/* Ordem proposital: vídeo e menu entram antes do mosaico. Assim, mesmo que a
+   galeria falhasse, os dois já estariam ligados. */
+protegido("filme", montarFilme);
+protegido("nav", montarNav);
+
+if (!album || !album.fotos.length) {
+  count.textContent = "Galeria em preparação.";
+} else {
+  protegido("galeria", montarGaleria);
+}
