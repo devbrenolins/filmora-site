@@ -1,4 +1,4 @@
-/* ═══════════ filmora — premium ═══════════ */
+/* ═══════════ filmora: premium ═══════════ */
 gsap.registerPlugin(ScrollTrigger);
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (s, c = document) => c.querySelector(s);
@@ -25,11 +25,12 @@ const SECTIONS = [
   { slug: "casamentos", name: "Casamentos", active: true, target: "#casamentos",
     cover: "assets/casamento/cas-353.jpg",
     desc: "Fotografia e cinema para o dia mais importante." },
-  { slug: "eventos", name: "Cobertura Fotográfica de Eventos", active: true, target: "#eventos",
+  { slug: "eventos", name: "Aniversários", active: true, target: "#eventos",
     cover: "assets/eventos/infantil-rosa/rosa-013.jpg",
     desc: "Aniversários, bodas e festas com olhar editorial." },
-  { slug: "aftermovies", name: "Aftermovies", active: false,
-    desc: "O resumo cinematográfico da sua celebração." },
+  { slug: "cobertura", name: "Cobertura de Eventos", active: true, target: "#cobertura",
+    cover: "https://lh3.googleusercontent.com/d/1gOngPusctonXmINtlhpUbA2qUFhXxxn4=w800",
+    desc: "Stories e Aftermovies." },
   { slug: "marcas", name: "Conteúdo para Marcas", active: false,
     desc: "Vídeos e fotos avulsos para produtos e negócios." },
   { slug: "social", name: "Gestão de Redes Sociais", active: false,
@@ -48,7 +49,7 @@ const SECTIONS = [
 $("#svcGrid").innerHTML = SECTIONS.filter(s => s.active).map((s, i) => {
   const n = String(i + 1).padStart(2, "0");
   return `<article class="svc svc--on" data-go="${s.target}">
-    <div class="svc__img"><img src="${s.cover}" alt="${s.name} — filmora" loading="lazy"></div>
+    <div class="svc__img"><img src="${s.cover}" alt="${s.name}, filmora" loading="lazy" referrerpolicy="no-referrer"></div>
     <div class="svc__body">
       <span class="svc__num">${n}</span>
       <h3 class="svc__name">${s.name}</h3>
@@ -67,23 +68,35 @@ const CASAMENTO = [
 ].filter((v, i, a) => a.indexOf(v) === i)
  .map(n => `assets/casamento/cas-${String(n).padStart(3, "0")}.jpg`);
 
+/* Páginas de galeria completa (geradas por tools/drive-sync.py).
+   null = ainda não existe → o link some do álbum. */
+const GALERIA = {
+  casamento: "casamento-rs",
+  menina:    "festa-menina",
+  menino:    "festa-menino",
+  cinquenta: "50-anos",
+};
+
 const EVENTOS = [
   {
-    name: "Bodas de Ouro",
-    tag: "50 anos · festa country",
+    name: "50 Anos",
+    tag: "festa country",
     dir: "assets/eventos/cinquenta",
+    galeria: GALERIA.cinquenta,
     imgs: ["c50-000", "c50-008", "c50-002", "c50-007", "c50-009", "c50-012"],
   },
   {
-    name: "Festa Infantil",
+    name: "Festa Menina",
     tag: "2 anos · fazendinha",
     dir: "assets/eventos/infantil-rosa",
+    galeria: GALERIA.menina,
     imgs: ["rosa-013", "rosa-005", "rosa-000", "rosa-004", "rosa-015", "rosa-003"],
   },
   {
-    name: "Aniversário Cowboy",
-    tag: "festa temática",
+    name: "Festa Menino",
+    tag: "festa temática · cowboy",
     dir: "assets/eventos/infantil-cowboy",
+    galeria: GALERIA.menino,
     imgs: ["cow-002", "cow-000", "cow-009", "cow-012", "cow-005", "cow-001"],
   },
 ];
@@ -102,38 +115,65 @@ $("#themeToggle").addEventListener("click", () => {
 /* ── ÁLBUNS (visitante escolhe → abre o carrossel) ── */
 const ALBUMS = {
   // Casamentos
-  "cas-nathany-victor": {
-    title: "Nathany & Victor", tag: "Casamento",
-    cover: "assets/casamento/cas-326.jpg", photos: CASAMENTO,
+  "cas-rs": {
+    title: "Casamento R&S", tag: "Fotografia e cinema",
+    cover: "assets/casamento/cas-326.jpg", photos: CASAMENTO, galeria: GALERIA.casamento,
   },
   // Eventos
   ...Object.fromEntries(EVENTOS.map((ev) => {
     const photos = ev.imgs.map(n => `${ev.dir}/${n}.jpg`);
-    return [ev.dir, { title: ev.name, tag: ev.tag, cover: photos[0], photos }];
+    return [ev.dir, { title: ev.name, tag: ev.tag, cover: photos[0], photos, galeria: ev.galeria }];
   })),
 };
+/* link "galeria completa": só aparece se o álbum já tiver página */
+function fullLink(a, cls) {
+  if (!a.galeria) return "";
+  const dados = (window.GALERIAS || {})[a.galeria];
+  const total = dados ? ` <em>· ${dados.fotos.length} fotos</em>` : "";
+  return `<a class="${cls}" href="/galeria/${a.galeria}.html"
+    aria-label="Ver a galeria completa de ${a.title}">Ver galeria completa${total} <span>→</span></a>`;
+}
 function albumCard(id, feature, i = 0) {
   const a = ALBUMS[id];
   return `<article class="album rv${feature ? " album--feature" : ""}" data-open="${id}" style="transition-delay:${i * 0.08}s">
     <div class="album__cover">
-      <img src="${a.cover}" alt="${a.title} — filmora" loading="lazy">
+      <img src="${a.cover}" alt="${a.title}, filmora" loading="lazy">
       <span class="album__count">${a.photos.length} fotos</span>
       <span class="album__view">Ver álbum <span>→</span></span>
     </div>
     <div class="album__meta">
       <h3 class="album__title">${a.title}</h3>
       <span class="album__tag">${a.tag}</span>
+      ${fullLink(a, "album__full")}
     </div>
   </article>`;
 }
-$("#galCasamento").innerHTML = albumCard("cas-nathany-victor", true);
+$("#galCasamento").innerHTML = albumCard("cas-rs", true);
 $("#eventsWrap").innerHTML = EVENTOS.map((ev, i) => albumCard(ev.dir, false, i)).join("");
 
+/* ── COBERTURA DE EVENTOS (stories + aftermovies, hospedados no Drive) ── */
+const VIDEOS = window.COBERTURA || [];
+$("#vidsWrap").innerHTML = VIDEOS.map((v, i) => `
+  <article class="vid rv" data-drive="${v.id}" style="transition-delay:${i * 0.06}s">
+    <div class="vid__poster">
+      <img src="https://lh3.googleusercontent.com/d/${v.id}=w800" alt="${v.titulo}, filmora"
+        loading="lazy" referrerpolicy="no-referrer">
+      <span class="vid__play" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </span>
+    </div>
+    <div class="vid__meta">
+      <h3 class="vid__title">${v.titulo}</h3>
+      <span class="vid__tag">${v.tag}</span>
+    </div>
+  </article>`).join("");
+
 /* ── CARROSSEL / LIGHTBOX ── */
-const lb = $("#lb"), lbImg = $("#lbImg"), lbCount = $("#lbCount");
+const lb = $("#lb"), lbImg = $("#lbImg"), lbCount = $("#lbCount"), lbFull = $("#lbFull");
 let lbList = [], lbIndex = 0;
-function openGallery(list, index = 0) {
-  lbList = list; lbIndex = index;
+function openGallery(album, index = 0) {
+  lbList = album.photos; lbIndex = index;
+  lbFull.innerHTML = fullLink(album, "lb__full-link");
   showLb();
   lb.classList.add("is-open");
   lb.setAttribute("aria-hidden", "false");
@@ -163,8 +203,9 @@ function closeLb() {
 }
 function step(d) { lbIndex = (lbIndex + d + lbList.length) % lbList.length; showLb(); }
 document.addEventListener("click", (e) => {
+  if (e.target.closest("a")) return;            // link da galeria completa segue seu caminho
   const card = e.target.closest("[data-open]");
-  if (card) openGallery(ALBUMS[card.dataset.open].photos, 0);
+  if (card) openGallery(ALBUMS[card.dataset.open], 0);
 });
 $("#lbClose").addEventListener("click", closeLb);
 $("#lbPrev").addEventListener("click", () => step(-1));
@@ -188,17 +229,31 @@ lbImg.style.transition = "opacity .4s ease";
 /* ── VÍDEO DO CASAMENTO (YouTube) ── */
 const YT_ID = "HGXlJedpLJ0";
 const vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
-function openVideo() {
-  const origin = location.protocol.startsWith("http") ? `&origin=${encodeURIComponent(location.origin)}` : "";
+function abrirVlb(embed, fallback, rotulo) {
   vlbFrame.innerHTML =
-    `<iframe src="https://www.youtube.com/embed/${YT_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1${origin}"
-      title="Filme do casamento — filmora" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+    `<iframe src="${embed}" title="${rotulo}, filmora"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
       referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-     <a class="vlb__fallback" href="https://youtu.be/${YT_ID}" target="_blank" rel="noopener">Não carregou? Abrir no YouTube →</a>`;
+     <a class="vlb__fallback" href="${fallback}" target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
   vlb.classList.add("is-open");
   vlb.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 }
+/* filme do casamento: YouTube */
+function openVideo() {
+  const origin = location.protocol.startsWith("http") ? `&origin=${encodeURIComponent(location.origin)}` : "";
+  abrirVlb(`https://www.youtube.com/embed/${YT_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1${origin}`,
+           `https://youtu.be/${YT_ID}`, "Filme do casamento");
+}
+/* stories e aftermovies: player do Drive */
+function openDrive(id, rotulo) {
+  abrirVlb(`https://drive.google.com/file/d/${id}/preview`,
+           `https://drive.google.com/file/d/${id}/view`, rotulo);
+}
+document.addEventListener("click", (e) => {
+  const card = e.target.closest("[data-drive]");
+  if (card) openDrive(card.dataset.drive, card.querySelector(".vid__title")?.textContent || "Vídeo");
+});
 function closeVideo() {
   vlb.classList.remove("is-open");
   vlb.setAttribute("aria-hidden", "true");

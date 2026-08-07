@@ -1,4 +1,4 @@
-# filmora — site
+# filmora
 
 Site institucional da **filmora**, agência de produção audiovisual especializada em
 fotografia e filmes de **casamentos** e **eventos**.
@@ -19,7 +19,7 @@ Experiência premium, clara e responsiva, com:
 
 ## Stack
 
-Estático — HTML + CSS + JavaScript (GSAP/ScrollTrigger via CDN). Sem build.
+Estático: HTML + CSS + JavaScript (GSAP/ScrollTrigger via CDN). Sem build.
 
 ```
 site/
