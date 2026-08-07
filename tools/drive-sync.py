@@ -2,13 +2,18 @@
 """
 Sincroniza as galerias completas com as pastas do Google Drive.
 
-As fotos NÃO são baixadas: o site aponta para o CDN do Google
-(lh3.googleusercontent.com/d/<id>=w<largura>), que redimensiona na hora.
-Por isso as pastas precisam continuar compartilhadas como
-"qualquer pessoa com o link".
+As fotos são BAIXADAS para assets/galerias/<slug>/ em duas versões WebP:
+full (1600px, lightbox) e thumb (700px, mosaico). O site não depende do CDN
+do Google em tempo de visita. Só os vídeos continuam no Drive, embutidos
+pelo player deles, então as pastas precisam seguir compartilhadas como
+"qualquer pessoa com o link" para o sync funcionar e os vídeos tocarem.
+
+O download é incremental: um _manifesto.json por álbum guarda qual id do
+Drive gerou cada arquivo, então rodar de novo só busca o que mudou.
 
 Uso:  python3 tools/drive-sync.py
-Gera: js/galerias-data.js  e  galeria/<slug>.html
+Gera: assets/galerias/**, assets/cobertura/**, js/galerias-data.js,
+      galeria/<slug>.html e sitemap.xml
 """
 
 import html
@@ -139,6 +144,99 @@ def escapar(t):
              .replace(">", "&gt;").replace('"', "&quot;"))
 
 
+# ── download e otimização ───────────────────────────────────────────────────
+LARGURA_GRANDE = 1600     # usada no lightbox
+LARGURA_THUMB = 700       # usada no mosaico
+QUALIDADE = 82            # WebP: ~43% do peso do JPEG equivalente, sem perda visível
+
+
+def baixar_imagem(fid, largura):
+    """Baixa do CDN do Google já redimensionado. Sem Referer: o CDN aplica
+    cota por site que referencia e devolve 429 quando estoura."""
+    url = f"https://lh3.googleusercontent.com/d/{fid}=w{largura}"
+    r = subprocess.run(["curl", "-sL", "--max-time", "120", url],
+                       capture_output=True)
+    dados = r.stdout
+    if len(dados) < 2000 or not dados.startswith(b"\xff\xd8"):   # não é JPEG
+        return None
+    return dados
+
+
+def gravar_par(dados, dir_full, dir_thumb, nome):
+    """Grava a versão grande e gera a miniatura, ambas em WebP."""
+    from PIL import Image
+    import io
+
+    im = Image.open(io.BytesIO(dados)).convert("RGB")
+    im.save(dir_full / nome, "WEBP", quality=QUALIDADE, method=6)
+
+    prop = LARGURA_THUMB / im.width
+    if prop < 1:
+        im = im.resize((LARGURA_THUMB, round(im.height * prop)), Image.LANCZOS)
+    im.save(dir_thumb / nome, "WEBP", quality=QUALIDADE, method=6)
+
+
+def sincronizar_fotos(slug, ids):
+    """Baixa o que falta em assets/galerias/<slug>/. Idempotente: um manifesto
+    guarda qual id do Drive gerou cada arquivo, então rodar de novo só busca o
+    que mudou."""
+    base = RAIZ / "assets" / "galerias" / slug
+    dir_full, dir_thumb = base / "full", base / "thumb"
+    dir_full.mkdir(parents=True, exist_ok=True)
+    dir_thumb.mkdir(parents=True, exist_ok=True)
+    manifesto_arq = base / "_manifesto.json"
+    manifesto = {}
+    if manifesto_arq.exists():
+        manifesto = json.loads(manifesto_arq.read_text(encoding="utf-8"))
+
+    nomes, novos, falhas = [], 0, []
+    for i, fid in enumerate(ids, 1):
+        nome = f"{i:03d}.webp"
+        nomes.append(nome)
+        ja_tem = (manifesto.get(nome) == fid
+                  and (dir_full / nome).exists() and (dir_thumb / nome).exists())
+        if ja_tem:
+            continue
+        dados = baixar_imagem(fid, LARGURA_GRANDE)
+        if not dados:
+            falhas.append(fid)
+            continue
+        gravar_par(dados, dir_full, dir_thumb, nome)
+        manifesto[nome] = fid
+        novos += 1
+
+    # limpa sobras de quando o álbum tinha mais fotos
+    for arq in list(dir_full.iterdir()) + list(dir_thumb.iterdir()):
+        if arq.name not in nomes:
+            arq.unlink()
+            manifesto.pop(arq.name, None)
+    manifesto_arq.write_text(json.dumps(manifesto, indent=2), encoding="utf-8")
+    return nomes, novos, falhas
+
+
+def sincronizar_posters(videos):
+    """Pôster de cada vídeo em assets/cobertura/. O vídeo em si continua no
+    Drive; só a imagem de capa vem para cá."""
+    base = RAIZ / "assets" / "cobertura"
+    base.mkdir(parents=True, exist_ok=True)
+    novos, falhas = 0, []
+    for v in videos:
+        destino = base / f"{v['id']}.webp"
+        v["poster"] = f"/assets/cobertura/{v['id']}.webp"
+        if destino.exists():
+            continue
+        dados = baixar_imagem(v["id"], 900)
+        if not dados:
+            falhas.append(v["id"])
+            continue
+        from PIL import Image
+        import io
+        Image.open(io.BytesIO(dados)).convert("RGB").save(
+            destino, "WEBP", quality=QUALIDADE, method=6)
+        novos += 1
+    return novos, falhas
+
+
 def bloco_filme(alb):
     """Banda do filme, quando o álbum tem vídeo. Abre no lightbox de vídeo."""
     v = alb.get("video")
@@ -190,7 +288,6 @@ def pagina(alb):
 <meta property="og:locale" content="pt_BR">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Prata&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/styles.css">
 <script>
@@ -283,14 +380,19 @@ def main():
                   file=sys.stderr)
             continue
         itens = amostrar(todas, alb.get("limite"))
+        nomes, novos, falhas = sincronizar_fotos(alb["slug"], [fid for fid, _ in itens])
         dados[alb["slug"]] = {
             "titulo": alb["titulo"],
             "tag": alb["tag"],
             "pasta": alb["pasta"],
-            "fotos": [fid for fid, _ in itens],
+            "dir": f"/assets/galerias/{alb['slug']}",
+            "fotos": nomes,
         }
         corte = f" (de {len(todas)})" if len(itens) < len(todas) else ""
-        print(f"  · {alb['slug']}: {len(itens)} fotos{corte}", file=sys.stderr)
+        extra = f" · {novos} baixadas" if novos else " · nada novo"
+        if falhas:
+            extra += f" · {len(falhas)} FALHARAM"
+        print(f"  · {alb['slug']}: {len(nomes)} fotos{corte}{extra}", file=sys.stderr)
 
         destino = RAIZ / "galeria" / f"{alb['slug']}.html"
         destino.parent.mkdir(exist_ok=True)
@@ -317,6 +419,10 @@ def main():
                            "titulo": TITULOS.get(fid) or titulo_video(nome),
                            "tag": grupo["tag"]})
         print(f"  · vídeos {grupo['tag']}: {len(itens)}", file=sys.stderr)
+
+    pn, pf = sincronizar_posters(videos)
+    print(f"  · pôsteres de vídeo: {pn} baixados" +
+          (f" · {len(pf)} FALHARAM" if pf else ""), file=sys.stderr)
 
     saida = RAIZ / "js" / "galerias-data.js"
     saida.write_text(

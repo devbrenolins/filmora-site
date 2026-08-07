@@ -29,7 +29,7 @@ const SECTIONS = [
     cover: "assets/eventos/infantil-rosa/rosa-013.jpg",
     desc: "Aniversários, bodas e festas com olhar editorial." },
   { slug: "cobertura", name: "Cobertura de Eventos", active: true, target: "#cobertura",
-    cover: "https://lh3.googleusercontent.com/d/1gOngPusctonXmINtlhpUbA2qUFhXxxn4=w800",
+    cover: "assets/cobertura/1gOngPusctonXmINtlhpUbA2qUFhXxxn4.webp",
     desc: "Stories e Aftermovies." },
   { slug: "marcas", name: "Conteúdo para Marcas", active: false,
     desc: "Vídeos e fotos avulsos para produtos e negócios." },
@@ -49,7 +49,7 @@ const SECTIONS = [
 $("#svcGrid").innerHTML = SECTIONS.filter(s => s.active).map((s, i) => {
   const n = String(i + 1).padStart(2, "0");
   return `<article class="svc svc--on" data-go="${s.target}">
-    <div class="svc__img"><img src="${s.cover}" alt="${s.name}, filmora" loading="lazy" referrerpolicy="no-referrer"></div>
+    <div class="svc__img"><img src="${s.cover}" alt="${s.name}, filmora" loading="lazy"></div>
     <div class="svc__body">
       <span class="svc__num">${n}</span>
       <h3 class="svc__name">${s.name}</h3>
@@ -156,8 +156,7 @@ const VIDEOS = window.COBERTURA || [];
 $("#vidsWrap").innerHTML = VIDEOS.map((v, i) => `
   <article class="vid rv" data-drive="${v.id}" style="transition-delay:${i * 0.06}s">
     <div class="vid__poster">
-      <img src="https://lh3.googleusercontent.com/d/${v.id}=w800" alt="${v.titulo}, filmora"
-        loading="lazy" referrerpolicy="no-referrer">
+      <img src="${v.poster}" alt="${v.titulo}, filmora" loading="lazy">
       <span class="vid__play" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </span>

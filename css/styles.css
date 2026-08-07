@@ -466,6 +466,15 @@ em{font-style:italic}
   .nav.is-open .nav__burger span:last-child{transform:translateY(-3.25px) rotate(-45deg)}
 }
 @media (max-width:560px){
+  /* no desktop o contador fica centrado embaixo e o botão à direita; na tela
+     estreita os dois disputam o mesmo espaço, então viram duas linhas */
+  .lb__full{left:50%;right:auto;transform:translateX(-50%)}
+  .lb__count{bottom:4.4rem}
+  /* o rótulo inteiro não cabe numa linha em 320px e quebrava dentro da pílula;
+     a contagem sai (a página de destino já abre com ela em destaque) */
+  .lb__full-link{font-size:.68rem;letter-spacing:.1em;padding:.5rem .9rem;gap:.4rem;
+    white-space:nowrap}
+  .lb__full-link em{display:none}
   /* centralizado, a quebra 1+2 fica torta; empilha os três */
   .intro__meta{flex-direction:column;gap:1.8rem}
   .masonry{columns:1}

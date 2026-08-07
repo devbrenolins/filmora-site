@@ -3,12 +3,10 @@ const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* Fotos vêm do CDN do Google, redimensionadas no servidor deles.
-   O CDN aplica cota por site que referencia e responde 429 quando estoura;
-   por isso toda requisição de imagem vai sem Referer (referrerpolicy). */
-const thumbURL = id => `https://lh3.googleusercontent.com/d/${id}=w800`;
-const fullURL  = id => `https://lh3.googleusercontent.com/d/${id}=w1800`;
-const semReferer = (img) => { img.referrerPolicy = "no-referrer"; return img; };
+/* Fotos servidas pelo próprio site (baixadas por tools/drive-sync.py).
+   thumb 700px no mosaico, full 1600px no lightbox. */
+const thumbURL = (dir, n) => `${dir}/thumb/${n}`;
+const fullURL  = (dir, n) => `${dir}/full/${n}`;
 
 const LOTE = 60;                                   // fotos por rodada
 const slug  = $("main.gal").dataset.album;
@@ -20,17 +18,18 @@ if (!album || !album.fotos.length) {
   count.textContent = "Galeria em preparação.";
 } else {
   const fotos = album.fotos;
+  const dir = album.dir;
   let mostradas = 0;
 
   count.textContent = `${fotos.length} fotos`;
 
   function render() {
     const ate = Math.min(mostradas + LOTE, fotos.length);
-    const html = fotos.slice(mostradas, ate).map((id, i) => `
+    const html = fotos.slice(mostradas, ate).map((n, i) => `
       <button class="gal__tile" data-i="${mostradas + i}" type="button"
         aria-label="Abrir foto ${mostradas + i + 1} de ${fotos.length}">
-        <img src="${thumbURL(id)}" alt="${album.titulo}, foto ${mostradas + i + 1}"
-          loading="lazy" decoding="async" referrerpolicy="no-referrer">
+        <img src="${thumbURL(dir, n)}" alt="${album.titulo}, foto ${mostradas + i + 1}"
+          loading="lazy" decoding="async">
       </button>`).join("");
     grid.insertAdjacentHTML("beforeend", html);
     mostradas = ate;
@@ -51,19 +50,18 @@ if (!album || !album.fotos.length) {
   let idx = 0;
   lbImg.style.transition = "opacity .4s ease";
 
-  const preload = src => { semReferer(new Image()).src = src; };
-  lbImg.referrerPolicy = "no-referrer";
+  const preload = src => { new Image().src = src; };
 
   function show() {
     lbCount.textContent = `${idx + 1} / ${fotos.length}`;
     lbImg.style.opacity = 0;
     setTimeout(() => {
-      const im = semReferer(new Image());
+      const im = new Image();
       im.onload = () => { lbImg.src = im.src; requestAnimationFrame(() => (lbImg.style.opacity = 1)); };
-      im.src = fullURL(fotos[idx]);
+      im.src = fullURL(dir, fotos[idx]);
     }, 200);
-    preload(fullURL(fotos[(idx + 1) % fotos.length]));
-    preload(fullURL(fotos[(idx - 1 + fotos.length) % fotos.length]));
+    preload(fullURL(dir, fotos[(idx + 1) % fotos.length]));
+    preload(fullURL(dir, fotos[(idx - 1 + fotos.length) % fotos.length]));
   }
   function open(i) {
     idx = i; show();
