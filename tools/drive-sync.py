@@ -59,7 +59,7 @@ ALBUNS = [
         "slug": "50-anos",
         "titulo": "50 Anos",
         "tag": "festa country",
-        "descricao": "A galeria completa da festa de 50 anos de casamento.",
+        "descricao": "A galeria completa da festa de 50 anos.",
         "secao": "eventos",
         "pasta": "15ZxHoRF5Zco8euPhFA0UJcsebwClJzn2",     # Aniversários/50
     },
@@ -247,6 +247,13 @@ def pagina(alb):
   <img class="footer__logo" src="/assets/logo-ink.png" alt="filmora">
   <p class="footer__tag">Fotografia &amp; Filmes para as histórias que merecem ficar.</p>
   <p class="footer__copy">© 2026 filmora · Agência de Produção Audiovisual</p>
+  <a class="byline" href="https://infusesoftware.com/" target="_blank" rel="noopener">
+    Desenvolvido por
+    <span class="byline__logo">
+      <img class="byline__symbol" src="/assets/infuse/infuse-symbol-white.webp" alt="" aria-hidden="true">
+      <img class="byline__word" src="/assets/infuse/infuse-word-white.webp" alt="Infuse Software">
+    </span>
+  </a>
 </footer>
 
 <div class="lb" id="lb" aria-hidden="true">

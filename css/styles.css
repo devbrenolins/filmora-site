@@ -373,6 +373,18 @@ em{font-style:italic}
 .footer__logo{width:120px}
 .footer__tag{font-family:var(--sans);font-style:italic;color:var(--muted)}
 .footer__copy{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);opacity:.7}
+/* assinatura da Infuse Software: logo e tipografia da marca deles */
+.byline{display:inline-flex;align-items:center;gap:.6rem;margin-top:.6rem;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-size:.72rem;letter-spacing:.04em;color:var(--muted);opacity:.75;
+  transition:opacity .3s var(--ease)}
+.byline:hover{opacity:1}
+.byline__logo{display:inline-flex;align-items:center;gap:.34rem}
+/* arte branca da Infuse: no tema claro inverte para tinta, no escuro fica branca.
+   Mesmo mecanismo do logo da filmora, com o sinal trocado (a arte já é clara). */
+.byline__logo img{filter:invert(calc(1 - var(--logo-invert)))}
+.byline__symbol{width:auto;height:17px}
+.byline__word{width:auto;height:11px}
 
 /* ═══ lightbox ═══ */
 .lb{position:fixed;inset:0;z-index:130;background:color-mix(in srgb,var(--bg) 92%,#000);
@@ -459,7 +471,9 @@ em{font-style:italic}
   .masonry{columns:1}
   .albums{grid-template-columns:1fr;gap:1.6rem}
   .svc{grid-template-columns:1fr}
-  .svc__img{aspect-ratio:16/10}
+  /* o aspect-ratio já define a altura; manter o min-height faria ele ditar a
+     LARGURA (170px × 16/10 = 272px) e estourar telas estreitas */
+  .svc__img{aspect-ratio:16/10;min-height:0}
   .svc__body{padding:0 1.3rem 1.5rem}
   .about__grid{grid-template-columns:1fr;text-align:center}
   .about__mid{grid-column:1}
@@ -467,6 +481,13 @@ em{font-style:italic}
   .hero__cta{flex-direction:column}
   .hero__cta .btn{width:100%}
   .film__poster{aspect-ratio:3/2}
+}
+/* telas ultraestreitas (Galaxy Fold fechado, 280px): o piso do clamp do título
+   do hero é maior que a tela, e os itens flex não encolhem sem min-width:0 */
+@media (max-width:340px){
+  .hero__inner{min-width:0}
+  .hero__title{font-size:2.9rem}
+  .svc,.svc__img,.svc__body{min-width:0}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;transition-duration:.01ms!important}
