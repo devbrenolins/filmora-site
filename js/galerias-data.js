@@ -5,7 +5,13 @@ window.GALERIAS = {
     "tag": "Fotografia e cinema",
     "pasta": "1hdrdsNgBVLONDXd5ekdoEs9zQAky0O98",
     "dir": "/assets/galerias/casamento-rs",
+    "destaque": true,
     "fotos": [
+      [
+        "000.webp",
+        700,
+        467
+      ],
       [
         "001.webp",
         700,
@@ -263,6 +269,7 @@ window.GALERIAS = {
     "tag": "2 anos · fazendinha",
     "pasta": "1GzvdDRYi5_FK8spfgpNOBOYYhbNE3r5-",
     "dir": "/assets/galerias/festa-menina",
+    "destaque": false,
     "fotos": [
       [
         "001.webp",
@@ -386,6 +393,7 @@ window.GALERIAS = {
     "tag": "festa temática · cowboy",
     "pasta": "1xltY1b3J0gYyMnE2WjpIU84T1Nli7spp",
     "dir": "/assets/galerias/festa-menino",
+    "destaque": false,
     "fotos": [
       [
         "001.webp",
@@ -459,6 +467,7 @@ window.GALERIAS = {
     "tag": "festa country",
     "pasta": "15ZxHoRF5Zco8euPhFA0UJcsebwClJzn2",
     "dir": "/assets/galerias/50-anos",
+    "destaque": false,
     "fotos": [
       [
         "001.webp",

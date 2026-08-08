@@ -226,7 +226,6 @@ lb.addEventListener("touchend", (e) => {
 lbImg.style.transition = "opacity .4s ease";
 
 /* ── VÍDEO DO CASAMENTO (YouTube) ── */
-const YT_ID = "HGXlJedpLJ0";
 const vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
 function abrirVlb(embed, fallback, rotulo) {
   vlbFrame.innerHTML =
@@ -237,12 +236,6 @@ function abrirVlb(embed, fallback, rotulo) {
   vlb.classList.add("is-open");
   vlb.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
-}
-/* filme do casamento: YouTube */
-function openVideo() {
-  const origin = location.protocol.startsWith("http") ? `&origin=${encodeURIComponent(location.origin)}` : "";
-  abrirVlb(`https://www.youtube.com/embed/${YT_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1${origin}`,
-           `https://youtu.be/${YT_ID}`, "Filme do casamento");
 }
 /* stories e aftermovies: player do Drive */
 function openDrive(id, rotulo) {
@@ -259,7 +252,6 @@ function closeVideo() {
   vlbFrame.innerHTML = "";
   document.body.style.overflow = "";
 }
-$$('[data-video]').forEach(el => el.addEventListener("click", openVideo));
 $("#vlbClose").addEventListener("click", closeVideo);
 vlb.addEventListener("click", (e) => { if (e.target === vlb) closeVideo(); });
 addEventListener("keydown", (e) => { if (e.key === "Escape" && vlb.classList.contains("is-open")) closeVideo(); });

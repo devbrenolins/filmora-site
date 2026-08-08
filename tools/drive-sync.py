@@ -36,13 +36,7 @@ ALBUNS = [
         "secao": "casamentos",
         "pasta": "1hdrdsNgBVLONDXd5ekdoEs9zQAky0O98",
         "limite": 50,    # a pasta tem 441; a galeria mostra 50 espalhadas pelo dia
-        "video": {
-            "youtube": "HGXlJedpLJ0",
-            "poster": "/assets/casamento/cas-347.jpg",
-            "kicker": "O filme",
-            "titulo": "Cada casamento vira um curta-metragem.",
-            "desc": "A emoção do dia inteiro editada em um filme. Aperte o play.",
-        },
+        "destaque": "assets/casamento/cas-347.jpg",   # abre a galeria em largura cheia
     },
     {
         "slug": "festa-menina",
@@ -182,6 +176,9 @@ def gravar_par(dados, dir_full, dir_thumb, nome):
     import io
 
     im = Image.open(io.BytesIO(dados)).convert("RGB")
+    if im.width > LARGURA_GRANDE:
+        im = im.resize((LARGURA_GRANDE, round(im.height * LARGURA_GRANDE / im.width)),
+                       Image.LANCZOS)
     im.save(dir_full / nome, "WEBP", quality=QUALIDADE, method=6)
 
     prop = LARGURA_THUMB / im.width
@@ -197,7 +194,7 @@ def medir(caminho):
         return im.width, im.height
 
 
-def sincronizar_fotos(slug, ids):
+def sincronizar_fotos(slug, ids, destaque=None):
     """Baixa o que falta em assets/galerias/<slug>/. Idempotente: um manifesto
     guarda qual id do Drive gerou cada arquivo, então rodar de novo só busca o
     que mudou."""
@@ -211,6 +208,23 @@ def sincronizar_fotos(slug, ids):
         manifesto = json.loads(manifesto_arq.read_text(encoding="utf-8"))
 
     nomes, novos, falhas = [], 0, []
+
+    # 000 é a foto de destaque: arquivo local, não vem do Drive
+    if destaque:
+        origem = RAIZ / destaque
+        nome = "000.webp"
+        if origem.exists():
+            if not ((dir_full / nome).exists() and (dir_thumb / nome).exists()
+                    and manifesto.get(nome) == destaque):
+                w, h = gravar_par(origem.read_bytes(), dir_full, dir_thumb, nome)
+                manifesto[nome] = destaque
+                novos += 1
+            else:
+                w, h = medir(dir_thumb / nome)
+            nomes.append([nome, w, h])
+        else:
+            print(f"  ! destaque não encontrado: {destaque}", file=sys.stderr)
+
     for i, fid in enumerate(ids, 1):
         nome = f"{i:03d}.webp"
         ja_tem = (manifesto.get(nome) == fid
@@ -258,38 +272,6 @@ def sincronizar_posters(videos):
             destino, "WEBP", quality=QUALIDADE, method=6)
         novos += 1
     return novos, falhas
-
-
-def bloco_filme(alb):
-    """Banda do filme, quando o álbum tem vídeo. Abre no lightbox de vídeo."""
-    v = alb.get("video")
-    if not v:
-        return ""
-    return f"""
-  <div class="galfilme" data-yt="{v['youtube']}">
-    <div class="galfilme__poster">
-      <img src="{v['poster']}" alt="{escapar(v['titulo'])}, filmora" loading="lazy">
-      <span class="galfilme__play" aria-hidden="true">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      </span>
-    </div>
-    <div class="galfilme__body">
-      <span class="cat__kicker">{escapar(v['kicker'])}</span>
-      <h2 class="galfilme__title">{escapar(v['titulo'])}</h2>
-      <p class="galfilme__desc">{escapar(v['desc'])}</p>
-      <button class="btn btn--solid" type="button">Assistir ao filme</button>
-    </div>
-  </div>
-"""
-
-
-def bloco_vlb(alb):
-    return "" if not alb.get("video") else """
-<div class="vlb" id="vlb" aria-hidden="true">
-  <button class="vlb__close" id="vlbClose" aria-label="fechar vídeo">×</button>
-  <div class="vlb__frame" id="vlbFrame"></div>
-</div>
-"""
 
 
 def pagina(alb, VERSAO):
@@ -350,7 +332,6 @@ def pagina(alb, VERSAO):
     <p class="gal__desc">{desc}</p>
     <span class="gal__count" id="galCount"></span>
   </div>
-{bloco_filme(alb)}
   <div class="gal__grid" id="galGrid"></div>
 
   <div class="gal__more">
@@ -383,7 +364,6 @@ def pagina(alb, VERSAO):
   <span class="lb__count" id="lbCount"></span>
   <figure class="lb__stage"><img id="lbImg" src="" alt=""></figure>
 </div>
-{bloco_vlb(alb)}
 <script src="/js/galerias-data.js?v={VERSAO}"></script>
 <script src="/js/galeria.js?v={VERSAO}"></script>
 </body>
@@ -404,12 +384,14 @@ def main():
                   file=sys.stderr)
             continue
         itens = amostrar(todas, alb.get("limite"))
-        nomes, novos, falhas = sincronizar_fotos(alb["slug"], [fid for fid, _ in itens])
+        nomes, novos, falhas = sincronizar_fotos(
+            alb["slug"], [fid for fid, _ in itens], alb.get("destaque"))
         dados[alb["slug"]] = {
             "titulo": alb["titulo"],
             "tag": alb["tag"],
             "pasta": alb["pasta"],
             "dir": f"/assets/galerias/{alb['slug']}",
+            "destaque": bool(alb.get("destaque")),
             "fotos": nomes,
         }
         corte = f" (de {len(todas)})" if len(itens) < len(todas) else ""

@@ -28,11 +28,14 @@ function montarGaleria() {
   const colunasAgora = () => (innerWidth <= 560 ? 1 : innerWidth <= 1000 ? 2 : 3);
   let colunasMontadas = 0;
 
-  const tile = ([arq, w, h], i) => `
-    <button class="gal__tile" data-i="${i}" type="button"
+  /* A foto de destaque abre a galeria em largura cheia; por ocupar a página
+     inteira, usa a versão grande em vez da miniatura. */
+  const temDestaque = !!album.destaque;
+  const tile = ([arq, w, h], i, hero = false) => `
+    <button class="gal__tile${hero ? " gal__tile--hero" : ""}" data-i="${i}" type="button"
       style="aspect-ratio:${w}/${h}"
       aria-label="Abrir foto ${i + 1} de ${fotos.length}">
-      <img data-src="${thumbURL(dir, arq)}" width="${w}" height="${h}"
+      <img data-src="${(hero ? fullURL : thumbURL)(dir, arq)}" width="${w}" height="${h}"
         alt="${album.titulo}, foto ${i + 1}" decoding="async">
     </button>`;
 
@@ -41,15 +44,20 @@ function montarGaleria() {
     colunasMontadas = n;
     const colunas = Array.from({ length: n }, () => []);
     const altura = new Array(n).fill(0);
+    let destaque = "";
     fotos.slice(0, mostradas).forEach((foto, i) => {
+      if (temDestaque && i === 0) {
+        destaque = `<div class="gal__hero">${tile(foto, 0, true)}</div>`;
+        return;
+      }
       let menor = 0;
       for (let c = 1; c < n; c++) if (altura[c] < altura[menor]) menor = c;
       colunas[menor].push(tile(foto, i));
       altura[menor] += foto[2] / foto[1];      // altura relativa à largura da coluna
     });
-    grid.innerHTML = colunas
-      .map((c) => `<div class="gal__col">${c.join("")}</div>`)
-      .join("");
+    grid.innerHTML = destaque + `<div class="gal__cols">${
+      colunas.map((c) => `<div class="gal__col">${c.join("")}</div>`).join("")
+    }</div>`;
     observar();
   }
 
@@ -163,37 +171,6 @@ function protegido(nome, fn) {
 }
 
 
-/* ── filme do álbum (YouTube, no lightbox de vídeo) ── */
-function montarFilme() {
-  const filme = $(".galfilme"), vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
-  if (!filme || !vlb) return;
-  const yt = filme.dataset.yt;
-  const abrir = () => {
-    const origin = location.protocol.startsWith("http")
-      ? `&origin=${encodeURIComponent(location.origin)}` : "";
-    vlbFrame.innerHTML =
-      `<iframe src="https://www.youtube.com/embed/${yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1${origin}"
-        title="Filme, filmora" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-       <a class="vlb__fallback" href="https://youtu.be/${yt}" target="_blank" rel="noopener">Não carregou? Abrir no YouTube →</a>`;
-    vlb.classList.add("is-open");
-    vlb.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  };
-  const fechar = () => {
-    vlb.classList.remove("is-open");
-    vlb.setAttribute("aria-hidden", "true");
-    vlbFrame.innerHTML = "";                 // corta o áudio ao fechar
-    document.body.style.overflow = "";
-  };
-  filme.addEventListener("click", abrir);
-  $("#vlbClose").addEventListener("click", (e) => { e.stopPropagation(); fechar(); });
-  vlb.addEventListener("click", (e) => { if (e.target === vlb) fechar(); });
-  addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && vlb.classList.contains("is-open")) fechar();
-  });
-}
-
 /* ── nav (mesmo comportamento da home) ── */
 function montarNav() {
   const nav = $("#nav");
@@ -212,9 +189,8 @@ function montarNav() {
   });
 }
 
-/* Ordem proposital: vídeo e menu entram antes do mosaico. Assim, mesmo que a
-   galeria falhasse, os dois já estariam ligados. */
-protegido("filme", montarFilme);
+/* Ordem proposital: o menu entra antes do mosaico, para continuar funcionando
+   mesmo se a galeria falhar. */
 protegido("nav", montarNav);
 
 if (!album || !album.fotos.length) {
