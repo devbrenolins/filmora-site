@@ -25,16 +25,23 @@ const SECTIONS = [
   { slug: "casamentos", name: "Casamentos", active: true, target: "#casamentos",
     cover: "assets/casamento/cas-353.jpg",
     desc: "Fotografia e cinema para o dia mais importante." },
+  { slug: "making-of", name: "Making Of da Noiva", active: true, target: "#making-of",
+    cover: "assets/galerias/making-of-noiva/thumb/030.webp",
+    desc: "Os preparativos da noiva, do vestido no cabide ao altar." },
   { slug: "eventos", name: "Aniversários", active: true, target: "#eventos",
     cover: "assets/eventos/infantil-rosa/rosa-013.jpg",
     desc: "Aniversários, bodas e festas com olhar editorial." },
+  { slug: "jaleco", name: "Cerimônia do Jaleco", active: true, target: "#jaleco",
+    cover: "assets/galerias/cerimonia-jaleco/thumb/012.webp",
+    desc: "Formatura e vida acadêmica registradas por inteiro." },
   { slug: "cobertura", name: "Cobertura de Eventos", active: true, target: "#cobertura",
     cover: "assets/cobertura/1gOngPusctonXmINtlhpUbA2qUFhXxxn4.webp",
     desc: "Stories e Aftermovies." },
+  { slug: "social", name: "Gestão de Redes Sociais", active: true, target: "#conteudo",
+    cover: "assets/conteudo/capa.webp",
+    desc: "Reels verticais produzidos em lote para o seu perfil." },
   { slug: "marcas", name: "Conteúdo para Marcas", active: false,
     desc: "Vídeos e fotos avulsos para produtos e negócios." },
-  { slug: "social", name: "Gestão de Redes Sociais", active: false,
-    desc: "Conteúdo planejado e recorrente para o seu perfil." },
   { slug: "storymaker", name: "Cobertura em Tempo Real · Storymaker", active: false,
     desc: "Registro ao vivo do seu evento, em tempo real." },
   { slug: "design", name: "Design & Identidade Visual", active: false,
@@ -44,21 +51,6 @@ const SECTIONS = [
   { slug: "aereas", name: "Imagens Aéreas", active: false,
     desc: "Tomadas de drone que ampliam a narrativa." },
 ];
-
-/* ── render do índice de serviços (só ativas por enquanto) ── */
-$("#svcGrid").innerHTML = SECTIONS.filter(s => s.active).map((s, i) => {
-  const n = String(i + 1).padStart(2, "0");
-  return `<article class="svc svc--on" data-go="${s.target}">
-    <div class="svc__img"><img src="${s.cover}" alt="${s.name}, filmora" loading="lazy"></div>
-    <div class="svc__body">
-      <span class="svc__num">${n}</span>
-      <h3 class="svc__name">${s.name}</h3>
-      <p class="svc__desc">${s.desc}</p>
-      <span class="svc__foot">Ver galeria <span class="svc__arrow">→</span></span>
-    </div>
-  </article>`;
-}).join("");
-$$('.svc--on').forEach(el => el.addEventListener("click", () => smoothTo(el.dataset.go)));
 
 /* ── dados das galerias ── */
 const CASAMENTO = [
@@ -102,6 +94,28 @@ const EVENTOS = [
 ];
 const LAYOUT = ["e-a", "e-b", "e-c", "e-d", "e-e", "e-f"];
 
+/* Álbuns cujas fotos já vêm inteiras do drive-sync: a prévia da home é uma
+   amostra espalhada pelo mesmo material da página completa, sem arquivo
+   duplicado no repositório. `capa` é o índice da foto que abre o card. */
+function albumDaGaleria(slug, capa = 0, n = 12) {
+  const d = (window.GALERIAS || {})[slug];
+  if (!d || !d.fotos.length) return null;
+  const passo = Math.max(1, d.fotos.length / n);
+  const escolhidas = [];
+  while (escolhidas.length < Math.min(n, d.fotos.length)) {
+    escolhidas.push(d.fotos[Math.floor(escolhidas.length * passo)][0]);
+  }
+  return {
+    title: d.titulo, tag: d.tag, galeria: slug,
+    cover: `${d.dir}/thumb/${d.fotos[Math.min(capa, d.fotos.length - 1)][0]}`,
+    photos: escolhidas.map(f => `${d.dir}/full/${f}`),
+  };
+}
+const NOVOS = {
+  "making-of-noiva": albumDaGaleria("making-of-noiva", 22),
+  "cerimonia-jaleco": albumDaGaleria("cerimonia-jaleco", 39),
+};
+
 /* ── THEME ── */
 const root = document.documentElement;
 $("#themeToggle").addEventListener("click", () => {
@@ -119,6 +133,8 @@ const ALBUMS = {
     title: "Casamento R&S", tag: "Fotografia e cinema",
     cover: "assets/casamento/cas-326.jpg", photos: CASAMENTO, galeria: GALERIA.casamento,
   },
+  // Making of e cerimônia do jaleco (dados gerados pelo drive-sync)
+  ...Object.fromEntries(Object.entries(NOVOS).filter(([, a]) => a)),
   // Eventos
   ...Object.fromEntries(EVENTOS.map((ev) => {
     const photos = ev.imgs.map(n => `${ev.dir}/${n}.jpg`);
@@ -151,12 +167,21 @@ function albumCard(id, feature, i = 0) {
 $("#galCasamento").innerHTML = albumCard("cas-rs", true);
 $("#eventsWrap").innerHTML = EVENTOS.map((ev, i) => albumCard(ev.dir, false, i)).join("");
 
-/* ── COBERTURA DE EVENTOS (stories + aftermovies, hospedados no Drive) ── */
-const VIDEOS = window.COBERTURA || [];
-$("#vidsWrap").innerHTML = VIDEOS.map((v, i) => `
-  <article class="vid rv" data-drive="${v.id}" style="transition-delay:${i * 0.06}s">
+/* seção sem dados sai da página inteira: melhor não existir do que existir vazia */
+function montarSecao(slug, alvo, secao) {
+  if (NOVOS[slug]) $(alvo).innerHTML = albumCard(slug, true);
+  else $(secao)?.remove();
+}
+montarSecao("making-of-noiva", "#galMakingOf", "#making-of");
+montarSecao("cerimonia-jaleco", "#galJaleco", "#jaleco");
+
+/* ── CARDS DE VÍDEO (cobertura e produção de conteúdo, hospedados no Drive) ── */
+function cardVideo(v, i, vertical = false) {
+  return `
+  <article class="vid rv" data-drive="${v.id}"${vertical ? " data-vert" : ""} style="transition-delay:${i * 0.06}s">
     <div class="vid__poster">
       <img src="${v.poster}" alt="${v.titulo}, filmora" loading="lazy">
+      ${v.destaque ? '<span class="vid__badge">Destaque</span>' : ""}
       <span class="vid__play" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </span>
@@ -165,7 +190,63 @@ $("#vidsWrap").innerHTML = VIDEOS.map((v, i) => `
       <h3 class="vid__title">${v.titulo}</h3>
       <span class="vid__tag">${v.tag}</span>
     </div>
-  </article>`).join("");
+  </article>`;
+}
+
+/* ── COBERTURA DE EVENTOS (stories + aftermovies) ── */
+const VIDEOS = window.COBERTURA || [];
+$("#vidsWrap").innerHTML = VIDEOS.map((v, i) => cardVideo(v, i)).join("");
+
+/* ── PRODUÇÃO DE CONTEÚDO (só vertical: o destino das peças é o Instagram) ── */
+const CONTEUDO = window.CONTEUDO || [];
+const PREVIA_CONTEUDO = 4;      // uma fileira limpa; o resto fica na página do serviço
+
+/* Os dados vêm lote por lote, uma criadora depois da outra — ordem que a página
+   do serviço mantém. Aqui só cabem as primeiras peças, e cortar em ordem traria
+   quase todas do mesmo perfil, então a vitrine reveza entre eles. */
+function previaEquilibrada(pecas, n) {
+  const filas = new Map();
+  pecas.forEach((p) => {
+    const fila = filas.get(p.perfil) || [];
+    fila.push(p);
+    filas.set(p.perfil, fila);
+  });
+  const escolhidas = [];
+  while (escolhidas.length < Math.min(n, pecas.length)) {
+    for (const fila of filas.values()) {
+      if (escolhidas.length >= n) break;
+      if (fila.length) escolhidas.push(fila.shift());
+    }
+  }
+  return escolhidas;
+}
+
+if (CONTEUDO.length) {
+  $("#conteudoWrap").innerHTML =
+    previaEquilibrada(CONTEUDO, PREVIA_CONTEUDO).map((v, i) => cardVideo(v, i, true)).join("");
+  if (CONTEUDO.length > PREVIA_CONTEUDO) {
+    $("#conteudoMais").textContent = `Ver todas as ${CONTEUDO.length} peças`;
+  }
+} else {
+  $("#conteudo")?.remove();
+}
+
+/* ── índice de serviços ──
+   Roda depois das seções porque uma seção sem material se remove da página, e
+   um card que rola para lugar nenhum é pior do que card nenhum. */
+$("#svcGrid").innerHTML = SECTIONS.filter(s => s.active && $(s.target)).map((s, i) => {
+  const n = String(i + 1).padStart(2, "0");
+  return `<article class="svc svc--on" data-go="${s.target}">
+    <div class="svc__img"><img src="${s.cover}" alt="${s.name}, filmora" loading="lazy"></div>
+    <div class="svc__body">
+      <span class="svc__num">${n}</span>
+      <h3 class="svc__name">${s.name}</h3>
+      <p class="svc__desc">${s.desc}</p>
+      <span class="svc__foot">Ver galeria <span class="svc__arrow">→</span></span>
+    </div>
+  </article>`;
+}).join("");
+$$('.svc--on').forEach(el => el.addEventListener("click", () => smoothTo(el.dataset.go)));
 
 /* ── CARROSSEL / LIGHTBOX ── */
 const lb = $("#lb"), lbImg = $("#lbImg"), lbCount = $("#lbCount"), lbFull = $("#lbFull");
@@ -225,26 +306,30 @@ lb.addEventListener("touchend", (e) => {
 }, { passive: true });
 lbImg.style.transition = "opacity .4s ease";
 
-/* ── VÍDEO DO CASAMENTO (YouTube) ── */
+/* ── PLAYER DE VÍDEO ──
+   Todo vídeo é servido pelo Drive; o site guarda só o pôster. */
 const vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
-function abrirVlb(embed, fallback, rotulo) {
+function abrirPlayer({ id, rotulo, vertical }) {
+  /* reel em moldura 16/9 fica minúsculo no meio de duas tarjas pretas */
+  vlbFrame.classList.toggle("vlb__frame--vert", !!vertical);
   vlbFrame.innerHTML =
-    `<iframe src="${embed}" title="${rotulo}, filmora"
+    `<iframe src="https://drive.google.com/file/d/${id}/preview" title="${rotulo}, filmora"
       allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
       referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-     <a class="vlb__fallback" href="${fallback}" target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
+     <a class="vlb__fallback" href="https://drive.google.com/file/d/${id}/view"
+        target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
   vlb.classList.add("is-open");
   vlb.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 }
-/* stories e aftermovies: player do Drive */
-function openDrive(id, rotulo) {
-  abrirVlb(`https://drive.google.com/file/d/${id}/preview`,
-           `https://drive.google.com/file/d/${id}/view`, rotulo);
-}
 document.addEventListener("click", (e) => {
   const card = e.target.closest("[data-drive]");
-  if (card) openDrive(card.dataset.drive, card.querySelector(".vid__title")?.textContent || "Vídeo");
+  if (!card) return;
+  abrirPlayer({
+    id: card.dataset.drive,
+    rotulo: card.querySelector(".vid__title")?.textContent || "Vídeo",
+    vertical: card.hasAttribute("data-vert"),
+  });
 });
 function closeVideo() {
   vlb.classList.remove("is-open");

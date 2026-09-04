@@ -12,8 +12,9 @@ O download é incremental: um _manifesto.json por álbum guarda qual id do
 Drive gerou cada arquivo, então rodar de novo só busca o que mudou.
 
 Uso:  python3 tools/drive-sync.py
-Gera: assets/galerias/**, assets/cobertura/**, js/galerias-data.js,
-      galeria/<slug>.html e sitemap.xml
+Gera: assets/galerias/**, assets/cobertura/**, assets/conteudo/**,
+      js/galerias-data.js, galeria/<slug>.html, galeria/producao-conteudo.html
+      e sitemap.xml
 """
 
 import html
@@ -62,6 +63,24 @@ ALBUNS = [
         "secao": "eventos",
         "pasta": "15ZxHoRF5Zco8euPhFA0UJcsebwClJzn2",     # Aniversários/50
     },
+    {
+        "slug": "making-of-noiva",
+        "titulo": "Making Of da Noiva",
+        "tag": "as horas antes do sim",
+        "descricao": "A galeria completa do making of da noiva: dos preparativos ao altar.",
+        "secao": "making-of",
+        "pasta": "18cjMX4fwuu6FfAGGeu_19PSSrrxK4f64",
+        "limite": 70,    # a pasta tem 220; a galeria mostra 70 espalhadas pelo dia
+    },
+    {
+        "slug": "cerimonia-jaleco",
+        "titulo": "Cerimônia do Jaleco",
+        "tag": "formatura · vida acadêmica",
+        "descricao": "A galeria completa da cerimônia do jaleco, do retrato de estúdio ao abraço da família.",
+        "secao": "jaleco",
+        "pasta": "1VKJrDpY6ryuiIP5FM4ROiNii3S1bd-H9",
+        "limite": 60,    # a pasta tem 91
+    },
 ]
 
 # ── vídeos da seção "Cobertura de Eventos" ──────────────────────────────────
@@ -69,6 +88,27 @@ VIDEOS = [
     {"tag": "Stories",    "pasta": "1WrocipEpdMx_c1x_gIMaGAhdiY13-Ewh", "recursivo": False},
     {"tag": "Aftermovie", "pasta": "1UtTI_vtJ_KgUN9xUUesikYKFQc0p1CjI", "recursivo": True},
 ]
+
+# ── produção de conteúdo para gerenciamento de perfil ───────────────────────
+# O entregável desse serviço é o feed do cliente, então aqui entra só o que é
+# vertical: as pastas têm as mesmas peças em corte horizontal (YouTube), que
+# ficariam deslocadas numa seção sobre Instagram.
+# Cada pasta é o lote de um perfil. `perfil` não muda a ordem daqui — a página
+# do serviço mostra lote por lote —, mas a home usa o campo para equilibrar as
+# poucas peças que cabem na vitrine entre as duas criadoras.
+VERTICAIS = [
+    {"tag": "Reels", "perfil": "perfil-1", "pasta": "1dEFngtdFq9p15WuUDsV2hIaMmqNnZD49"},   # .../Vídeos/Verticais (rede social)
+    {"tag": "Reels", "perfil": "perfil-2", "pasta": "1Ibac3A-iUQUwvzKvYt5xtCYmUxnR-yCt"},   # .../Vídeos Verticais (Instagram)
+]
+
+# peças que abrem a seção, na ordem
+DESTAQUES = [
+    "1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE",   # Quanto o Senhor tem de nós
+    "1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg",   # Se você fosse viajar
+]
+
+# retrato da cliente que ilustra o serviço no índice e na abertura da seção
+CAPA_CONTEUDO = "1A0f5C58WOqGzMswuTpmGOTygLxlmauJj"
 
 # Nome de arquivo do Drive vira título no site. Quando o nome interno não serve
 # para o público, coloque o título aqui (id do arquivo → título).
@@ -81,6 +121,19 @@ TITULOS = {
     "1kdFbnry1sywdeepLtlIwjCuojzvNckHg": "Decoração São João 2026",
     "1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR": "Nosso Sertão · Manim",
     "1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK": "Nalvinho",
+    # verticais da produção de conteúdo: o nome do arquivo vira Caixa Alta Em
+    # Toda Palavra no titulo_video(), e estes títulos são frases.
+    "1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE": "Quanto o Senhor tem de nós",
+    "1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg": "Se você fosse viajar",
+    "1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2": "Espírito de sabedoria e revelação",
+    "1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg": "Pois ele é a nossa paz",
+    "1iFGRlffppviNpA4rqCNDJSwG8AupC6az": "Se a gente faz tudo da mesma forma",
+    "1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4": "Se você ganhasse hoje na mega-sena",
+    "1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq": "A presença ou a promessa",
+    "104GDVCQdzovM7D534AfUHxEFa4T4mI6s": "Casa na rocha ou na areia",
+    "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ": "Milagres",
+    "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX": "Salmos",
+    "1kRt86EVuJQasTUflWEGGBY68gqWIojNX": "Confiança no Senhor",
 }
 
 
@@ -138,7 +191,7 @@ def versao_assets():
     o navegador não servir versão velha de cache depois de um deploy."""
     import hashlib
     h = hashlib.sha1()
-    for rel in ("css/styles.css", "js/galeria.js", "js/galerias-data.js"):
+    for rel in ("css/styles.css", "js/galeria.js", "js/conteudo.js", "js/galerias-data.js"):
         arq = RAIZ / rel
         if arq.exists():
             h.update(arq.read_bytes())
@@ -148,6 +201,40 @@ def versao_assets():
 def escapar(t):
     return (t.replace("&", "&amp;").replace("<", "&lt;")
              .replace(">", "&gt;").replace('"', "&quot;"))
+
+
+# ── chrome compartilhado pelas páginas geradas ──────────────────────────────
+NAV = """<header class="nav" id="nav">
+  <a href="/" class="nav__brand" aria-label="filmora, início">
+    <img class="nav__logo" src="/assets/logo-ink.png" alt="filmora">
+  </a>
+  <nav class="nav__links">
+    <a href="/#servicos">Serviços</a>
+    <a href="/#sobre">Sobre</a>
+    <a href="/#contato">Contato</a>
+  </nav>
+  <div class="nav__actions">
+    <button class="theme" id="themeToggle" aria-label="alternar tema claro e escuro">
+      <svg class="theme__sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+      <svg class="theme__moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>
+    </button>
+    <a href="/#contato" class="nav__cta">Orçamento</a>
+  </div>
+  <button class="nav__burger" id="burger" aria-label="menu"><span></span><span></span></button>
+</header>"""
+
+RODAPE = """<footer class="footer">
+  <img class="footer__logo" src="/assets/logo-ink.png" alt="filmora">
+  <p class="footer__tag">Fotografia &amp; Filmes para as histórias que merecem ficar.</p>
+  <p class="footer__copy">© 2026 filmora · Agência de Produção Audiovisual</p>
+  <a class="byline" href="https://infusesoftware.com/" target="_blank" rel="noopener">
+    Desenvolvido por
+    <span class="byline__logo">
+      <img class="byline__symbol" src="/assets/infuse/infuse-symbol-white.webp" alt="" aria-hidden="true">
+      <img class="byline__word" src="/assets/infuse/infuse-word-white.webp" alt="Infuse Software">
+    </span>
+  </a>
+</footer>"""
 
 
 # ── download e otimização ───────────────────────────────────────────────────
@@ -251,15 +338,15 @@ def sincronizar_fotos(slug, ids, destaque=None):
     return nomes, novos, falhas
 
 
-def sincronizar_posters(videos):
-    """Pôster de cada vídeo em assets/cobertura/. O vídeo em si continua no
+def sincronizar_posters(videos, pasta="cobertura"):
+    """Pôster de cada vídeo em assets/<pasta>/. O vídeo em si continua no
     Drive; só a imagem de capa vem para cá."""
-    base = RAIZ / "assets" / "cobertura"
+    base = RAIZ / "assets" / pasta
     base.mkdir(parents=True, exist_ok=True)
     novos, falhas = 0, []
     for v in videos:
         destino = base / f"{v['id']}.webp"
-        v["poster"] = f"/assets/cobertura/{v['id']}.webp"
+        v["poster"] = f"/assets/{pasta}/{v['id']}.webp"
         if destino.exists():
             continue
         dados = baixar_imagem(v["id"], 900)
@@ -272,6 +359,23 @@ def sincronizar_posters(videos):
             destino, "WEBP", quality=QUALIDADE, method=6)
         novos += 1
     return novos, falhas
+
+
+def sincronizar_capa(fid, destino_rel, largura=1200):
+    """Baixa uma foto avulsa do Drive para servir de capa de seção."""
+    destino = RAIZ / destino_rel
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    if destino.exists():
+        return False
+    dados = baixar_imagem(fid, largura)
+    if not dados:
+        print(f"  ! capa {destino_rel}: download falhou", file=sys.stderr)
+        return False
+    from PIL import Image
+    import io
+    Image.open(io.BytesIO(dados)).convert("RGB").save(
+        destino, "WEBP", quality=QUALIDADE, method=6)
+    return True
 
 
 def pagina(alb, VERSAO):
@@ -305,24 +409,7 @@ def pagina(alb, VERSAO):
 </head>
 <body class="page-galeria">
 
-<header class="nav" id="nav">
-  <a href="/" class="nav__brand" aria-label="filmora, início">
-    <img class="nav__logo" src="/assets/logo-ink.png" alt="filmora">
-  </a>
-  <nav class="nav__links">
-    <a href="/#servicos">Serviços</a>
-    <a href="/#sobre">Sobre</a>
-    <a href="/#contato">Contato</a>
-  </nav>
-  <div class="nav__actions">
-    <button class="theme" id="themeToggle" aria-label="alternar tema claro e escuro">
-      <svg class="theme__sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
-      <svg class="theme__moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>
-    </button>
-    <a href="/#contato" class="nav__cta">Orçamento</a>
-  </div>
-  <button class="nav__burger" id="burger" aria-label="menu"><span></span><span></span></button>
-</header>
+{NAV}
 
 <main class="gal" data-album="{alb['slug']}">
   <div class="gal__head">
@@ -344,18 +431,7 @@ def pagina(alb, VERSAO):
   </div>
 </main>
 
-<footer class="footer">
-  <img class="footer__logo" src="/assets/logo-ink.png" alt="filmora">
-  <p class="footer__tag">Fotografia &amp; Filmes para as histórias que merecem ficar.</p>
-  <p class="footer__copy">© 2026 filmora · Agência de Produção Audiovisual</p>
-  <a class="byline" href="https://infusesoftware.com/" target="_blank" rel="noopener">
-    Desenvolvido por
-    <span class="byline__logo">
-      <img class="byline__symbol" src="/assets/infuse/infuse-symbol-white.webp" alt="" aria-hidden="true">
-      <img class="byline__word" src="/assets/infuse/infuse-word-white.webp" alt="Infuse Software">
-    </span>
-  </a>
-</footer>
+{RODAPE}
 
 <div class="lb" id="lb" aria-hidden="true">
   <button class="lb__close" id="lbClose" aria-label="fechar">×</button>
@@ -366,6 +442,90 @@ def pagina(alb, VERSAO):
 </div>
 <script src="/js/galerias-data.js?v={VERSAO}"></script>
 <script src="/js/galeria.js?v={VERSAO}"></script>
+</body>
+</html>
+"""
+
+
+def pagina_conteudo(VERSAO):
+    """Página do serviço de produção de conteúdo (gerenciamento de perfil).
+    Não usa o mosaico de fotos: o entregável aqui é vídeo vertical, então a
+    página monta os cards a partir de window.CONTEUDO e toca no player do Drive."""
+    desc = ("Produção de conteúdo vertical para gerenciamento de perfil no Instagram: "
+            "roteiro, captação, edição e entrega mensal de reels.")
+    return f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produção de Conteúdo para Instagram | filmora</title>
+<meta name="description" content="{desc}">
+<meta name="theme-color" content="#f7f4ef">
+<link rel="icon" href="/assets/logo.jpg">
+<meta property="og:title" content="Produção de Conteúdo para Instagram | filmora">
+<meta property="og:description" content="{desc}">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pt_BR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Prata&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v={VERSAO}">
+<script>
+  (function(){{
+    var t = 'light';
+    try{{ t = localStorage.getItem('filmora-theme') || 'light'; }}catch(e){{}}
+    document.documentElement.setAttribute('data-theme', t);
+  }})();
+</script>
+</head>
+<body class="page-galeria">
+
+{NAV}
+
+<main class="gal">
+  <div class="gal__head">
+    <a class="gal__back" href="/#conteudo"><span>←</span> Voltar ao portfólio</a>
+    <span class="cat__kicker">Gerenciamento de perfil</span>
+    <h1 class="gal__title">Produção de Conteúdo</h1>
+    <p class="gal__desc">Um perfil vivo não se sustenta em post avulso. Cuidamos do ciclo inteiro:
+    roteiro, captação, edição, legenda e entrega. Tudo em formato vertical, pensado para
+    o feed e os reels do Instagram.</p>
+    <span class="gal__count" id="conteudoCount"></span>
+  </div>
+
+  <section class="conteudo__bloco">
+    <h2 class="conteudo__rotulo">Em destaque</h2>
+    <div class="vids vids--vert vids--destaque" id="conteudoDestaques"></div>
+  </section>
+
+  <section class="conteudo__bloco">
+    <h2 class="conteudo__rotulo">Outras peças</h2>
+    <div class="vids vids--vert" id="conteudoGrid"></div>
+  </section>
+
+  <section class="fluxo">
+    <article><span class="fluxo__num">01</span><h3>Roteiro</h3>
+      <p>Pauta e roteiro alinhados à voz do perfil, com o gancho já pensado para os primeiros segundos.</p></article>
+    <article><span class="fluxo__num">02</span><h3>Captação</h3>
+      <p>Luz, áudio e direção de cena. A gravação é conduzida para o material não parecer improviso.</p></article>
+    <article><span class="fluxo__num">03</span><h3>Edição &amp; entrega</h3>
+      <p>Corte vertical, legenda queimada e trilha. Sai pronto para publicar, no calendário combinado.</p></article>
+  </section>
+
+  <div class="gal__cta">
+    <p>Quer esse ritmo no seu perfil?</p>
+    <a class="btn btn--solid" href="https://wa.me/5575997083386?text=Ol%C3%A1%20filmora!%20Quero%20produ%C3%A7%C3%A3o%20de%20conte%C3%BAdo%20para%20o%20meu%20perfil." target="_blank" rel="noopener">Solicitar orçamento</a>
+  </div>
+</main>
+
+{RODAPE}
+
+<div class="vlb" id="vlb" aria-hidden="true">
+  <button class="vlb__close" id="vlbClose" aria-label="fechar vídeo">×</button>
+  <div class="vlb__frame vlb__frame--vert" id="vlbFrame"></div>
+</div>
+<script src="/js/galerias-data.js?v={VERSAO}"></script>
+<script src="/js/conteudo.js?v={VERSAO}"></script>
 </body>
 </html>
 """
@@ -406,7 +566,7 @@ def main():
 
     urls = "".join(
         f"\n  <url><loc>/galeria/{s}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>"
-        for s in dados
+        for s in list(dados) + ["producao-conteudo"]
     )
     (RAIZ / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -430,17 +590,44 @@ def main():
     print(f"  · pôsteres de vídeo: {pn} baixados" +
           (f" · {len(pf)} FALHARAM" if pf else ""), file=sys.stderr)
 
+    # produção de conteúdo: só as peças verticais, com os destaques na frente
+    conteudo = []
+    for grupo in VERTICAIS:
+        itens = listar_pasta(grupo["pasta"], exts=r"mp4|mov|m4v|webm")
+        for fid, nome in itens:
+            conteudo.append({"id": fid,
+                             "titulo": TITULOS.get(fid) or titulo_video(nome),
+                             "tag": grupo["tag"],
+                             "perfil": grupo["perfil"],
+                             "destaque": fid in DESTAQUES})
+        print(f"  · verticais {grupo['perfil']}: {len(itens)}", file=sys.stderr)
+    # destaques na frente; o resto segue a ordem das pastas, um lote por perfil
+    ordem = {fid: i for i, fid in enumerate(DESTAQUES)}
+    conteudo.sort(key=lambda v2: ordem.get(v2["id"], len(DESTAQUES)))
+    faltando = [d for d in DESTAQUES if d not in {v2["id"] for v2 in conteudo}]
+    if faltando:
+        print(f"  ! destaque(s) fora das pastas verticais: {faltando}", file=sys.stderr)
+
+    cn, cf = sincronizar_posters(conteudo, pasta="conteudo")
+    print(f"  · pôsteres de conteúdo: {cn} baixados" +
+          (f" · {len(cf)} FALHARAM" if cf else ""), file=sys.stderr)
+    if sincronizar_capa(CAPA_CONTEUDO, "assets/conteudo/capa.webp"):
+        print("  · capa da seção de conteúdo baixada", file=sys.stderr)
+
     saida = RAIZ / "js" / "galerias-data.js"
     saida.write_text(
         "/* GERADO por tools/drive-sync.py: não edite à mão. */\n"
         "window.GALERIAS = " + json.dumps(dados, ensure_ascii=False, indent=2) + ";\n"
-        "window.COBERTURA = " + json.dumps(videos, ensure_ascii=False, indent=2) + ";\n",
+        "window.COBERTURA = " + json.dumps(videos, ensure_ascii=False, indent=2) + ";\n"
+        "window.CONTEUDO = " + json.dumps(conteudo, ensure_ascii=False, indent=2) + ";\n",
         encoding="utf-8",
     )
     v = versao_assets()
     for destino, alb in paginas_pendentes:
         destino.parent.mkdir(exist_ok=True)
         destino.write_text(pagina(alb, v), encoding="utf-8")
+    (RAIZ / "galeria" / "producao-conteudo.html").write_text(
+        pagina_conteudo(v), encoding="utf-8")
 
     total = sum(len(v2["fotos"]) for v2 in dados.values())
     print(f"→ {saida.relative_to(RAIZ)} · {len(dados)} álbuns · {total} fotos", file=sys.stderr)

@@ -560,6 +560,674 @@ window.GALERIAS = {
         467
       ]
     ]
+  },
+  "making-of-noiva": {
+    "titulo": "Making Of da Noiva",
+    "tag": "as horas antes do sim",
+    "pasta": "18cjMX4fwuu6FfAGGeu_19PSSrrxK4f64",
+    "dir": "/assets/galerias/making-of-noiva",
+    "destaque": false,
+    "fotos": [
+      [
+        "001.webp",
+        700,
+        467
+      ],
+      [
+        "002.webp",
+        700,
+        1050
+      ],
+      [
+        "003.webp",
+        700,
+        467
+      ],
+      [
+        "004.webp",
+        700,
+        1050
+      ],
+      [
+        "005.webp",
+        700,
+        1050
+      ],
+      [
+        "006.webp",
+        700,
+        1050
+      ],
+      [
+        "007.webp",
+        700,
+        1050
+      ],
+      [
+        "008.webp",
+        700,
+        1050
+      ],
+      [
+        "009.webp",
+        700,
+        1050
+      ],
+      [
+        "010.webp",
+        700,
+        467
+      ],
+      [
+        "011.webp",
+        700,
+        1050
+      ],
+      [
+        "012.webp",
+        700,
+        1050
+      ],
+      [
+        "013.webp",
+        700,
+        1050
+      ],
+      [
+        "014.webp",
+        700,
+        467
+      ],
+      [
+        "015.webp",
+        700,
+        467
+      ],
+      [
+        "016.webp",
+        700,
+        1050
+      ],
+      [
+        "017.webp",
+        700,
+        1050
+      ],
+      [
+        "018.webp",
+        700,
+        1050
+      ],
+      [
+        "019.webp",
+        700,
+        1050
+      ],
+      [
+        "020.webp",
+        700,
+        1050
+      ],
+      [
+        "021.webp",
+        700,
+        467
+      ],
+      [
+        "022.webp",
+        700,
+        1050
+      ],
+      [
+        "023.webp",
+        700,
+        467
+      ],
+      [
+        "024.webp",
+        700,
+        1050
+      ],
+      [
+        "025.webp",
+        700,
+        467
+      ],
+      [
+        "026.webp",
+        700,
+        467
+      ],
+      [
+        "027.webp",
+        700,
+        467
+      ],
+      [
+        "028.webp",
+        700,
+        467
+      ],
+      [
+        "029.webp",
+        700,
+        467
+      ],
+      [
+        "030.webp",
+        700,
+        467
+      ],
+      [
+        "031.webp",
+        700,
+        467
+      ],
+      [
+        "032.webp",
+        700,
+        1050
+      ],
+      [
+        "033.webp",
+        700,
+        1050
+      ],
+      [
+        "034.webp",
+        700,
+        1050
+      ],
+      [
+        "035.webp",
+        700,
+        1050
+      ],
+      [
+        "036.webp",
+        700,
+        1050
+      ],
+      [
+        "037.webp",
+        700,
+        1050
+      ],
+      [
+        "038.webp",
+        700,
+        1050
+      ],
+      [
+        "039.webp",
+        700,
+        1050
+      ],
+      [
+        "040.webp",
+        700,
+        1050
+      ],
+      [
+        "041.webp",
+        700,
+        467
+      ],
+      [
+        "042.webp",
+        700,
+        467
+      ],
+      [
+        "043.webp",
+        700,
+        1050
+      ],
+      [
+        "044.webp",
+        700,
+        467
+      ],
+      [
+        "045.webp",
+        700,
+        467
+      ],
+      [
+        "046.webp",
+        700,
+        467
+      ],
+      [
+        "047.webp",
+        700,
+        1050
+      ],
+      [
+        "048.webp",
+        700,
+        1050
+      ],
+      [
+        "049.webp",
+        700,
+        467
+      ],
+      [
+        "050.webp",
+        700,
+        1050
+      ],
+      [
+        "051.webp",
+        700,
+        1050
+      ],
+      [
+        "052.webp",
+        700,
+        467
+      ],
+      [
+        "053.webp",
+        700,
+        467
+      ],
+      [
+        "054.webp",
+        700,
+        467
+      ],
+      [
+        "055.webp",
+        700,
+        467
+      ],
+      [
+        "056.webp",
+        700,
+        467
+      ],
+      [
+        "057.webp",
+        700,
+        467
+      ],
+      [
+        "058.webp",
+        700,
+        467
+      ],
+      [
+        "059.webp",
+        700,
+        467
+      ],
+      [
+        "060.webp",
+        700,
+        467
+      ],
+      [
+        "061.webp",
+        700,
+        467
+      ],
+      [
+        "062.webp",
+        700,
+        467
+      ],
+      [
+        "063.webp",
+        700,
+        467
+      ],
+      [
+        "064.webp",
+        700,
+        467
+      ],
+      [
+        "065.webp",
+        700,
+        467
+      ],
+      [
+        "066.webp",
+        700,
+        467
+      ],
+      [
+        "067.webp",
+        700,
+        467
+      ],
+      [
+        "068.webp",
+        700,
+        467
+      ],
+      [
+        "069.webp",
+        700,
+        467
+      ],
+      [
+        "070.webp",
+        700,
+        467
+      ]
+    ]
+  },
+  "cerimonia-jaleco": {
+    "titulo": "Cerimônia do Jaleco",
+    "tag": "formatura · vida acadêmica",
+    "pasta": "1VKJrDpY6ryuiIP5FM4ROiNii3S1bd-H9",
+    "dir": "/assets/galerias/cerimonia-jaleco",
+    "destaque": false,
+    "fotos": [
+      [
+        "001.webp",
+        700,
+        1050
+      ],
+      [
+        "002.webp",
+        700,
+        1050
+      ],
+      [
+        "003.webp",
+        700,
+        1050
+      ],
+      [
+        "004.webp",
+        700,
+        467
+      ],
+      [
+        "005.webp",
+        700,
+        1050
+      ],
+      [
+        "006.webp",
+        700,
+        1050
+      ],
+      [
+        "007.webp",
+        700,
+        1050
+      ],
+      [
+        "008.webp",
+        700,
+        1050
+      ],
+      [
+        "009.webp",
+        700,
+        1050
+      ],
+      [
+        "010.webp",
+        700,
+        1050
+      ],
+      [
+        "011.webp",
+        700,
+        1050
+      ],
+      [
+        "012.webp",
+        700,
+        1050
+      ],
+      [
+        "013.webp",
+        700,
+        467
+      ],
+      [
+        "014.webp",
+        700,
+        467
+      ],
+      [
+        "015.webp",
+        700,
+        1050
+      ],
+      [
+        "016.webp",
+        700,
+        467
+      ],
+      [
+        "017.webp",
+        700,
+        1050
+      ],
+      [
+        "018.webp",
+        700,
+        1050
+      ],
+      [
+        "019.webp",
+        700,
+        1050
+      ],
+      [
+        "020.webp",
+        700,
+        1050
+      ],
+      [
+        "021.webp",
+        700,
+        467
+      ],
+      [
+        "022.webp",
+        700,
+        467
+      ],
+      [
+        "023.webp",
+        700,
+        1050
+      ],
+      [
+        "024.webp",
+        700,
+        1050
+      ],
+      [
+        "025.webp",
+        700,
+        467
+      ],
+      [
+        "026.webp",
+        700,
+        467
+      ],
+      [
+        "027.webp",
+        700,
+        467
+      ],
+      [
+        "028.webp",
+        700,
+        467
+      ],
+      [
+        "029.webp",
+        700,
+        467
+      ],
+      [
+        "030.webp",
+        700,
+        467
+      ],
+      [
+        "031.webp",
+        700,
+        467
+      ],
+      [
+        "032.webp",
+        700,
+        467
+      ],
+      [
+        "033.webp",
+        700,
+        467
+      ],
+      [
+        "034.webp",
+        700,
+        1050
+      ],
+      [
+        "035.webp",
+        700,
+        467
+      ],
+      [
+        "036.webp",
+        700,
+        467
+      ],
+      [
+        "037.webp",
+        700,
+        1050
+      ],
+      [
+        "038.webp",
+        700,
+        1050
+      ],
+      [
+        "039.webp",
+        700,
+        1050
+      ],
+      [
+        "040.webp",
+        700,
+        467
+      ],
+      [
+        "041.webp",
+        700,
+        467
+      ],
+      [
+        "042.webp",
+        700,
+        1050
+      ],
+      [
+        "043.webp",
+        700,
+        1050
+      ],
+      [
+        "044.webp",
+        700,
+        1050
+      ],
+      [
+        "045.webp",
+        700,
+        1050
+      ],
+      [
+        "046.webp",
+        700,
+        467
+      ],
+      [
+        "047.webp",
+        700,
+        1050
+      ],
+      [
+        "048.webp",
+        700,
+        1050
+      ],
+      [
+        "049.webp",
+        700,
+        1050
+      ],
+      [
+        "050.webp",
+        700,
+        467
+      ],
+      [
+        "051.webp",
+        700,
+        467
+      ],
+      [
+        "052.webp",
+        700,
+        467
+      ],
+      [
+        "053.webp",
+        700,
+        467
+      ],
+      [
+        "054.webp",
+        700,
+        1050
+      ],
+      [
+        "055.webp",
+        700,
+        1050
+      ],
+      [
+        "056.webp",
+        700,
+        467
+      ],
+      [
+        "057.webp",
+        700,
+        467
+      ],
+      [
+        "058.webp",
+        700,
+        467
+      ],
+      [
+        "059.webp",
+        700,
+        1050
+      ],
+      [
+        "060.webp",
+        700,
+        1050
+      ]
+    ]
   }
 };
 window.COBERTURA = [
@@ -610,5 +1278,95 @@ window.COBERTURA = [
     "titulo": "Nalvinho",
     "tag": "Aftermovie",
     "poster": "/assets/cobertura/1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK.webp"
+  }
+];
+window.CONTEUDO = [
+  {
+    "id": "1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE",
+    "titulo": "Quanto o Senhor tem de nós",
+    "tag": "Reels",
+    "perfil": "perfil-2",
+    "destaque": true,
+    "poster": "/assets/conteudo/1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE.webp"
+  },
+  {
+    "id": "1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg",
+    "titulo": "Se você fosse viajar",
+    "tag": "Reels",
+    "perfil": "perfil-1",
+    "destaque": true,
+    "poster": "/assets/conteudo/1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg.webp"
+  },
+  {
+    "id": "1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2",
+    "titulo": "Espírito de sabedoria e revelação",
+    "tag": "Reels",
+    "perfil": "perfil-1",
+    "destaque": false,
+    "poster": "/assets/conteudo/1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2.webp"
+  },
+  {
+    "id": "1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg",
+    "titulo": "Pois ele é a nossa paz",
+    "tag": "Reels",
+    "perfil": "perfil-1",
+    "destaque": false,
+    "poster": "/assets/conteudo/1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg.webp"
+  },
+  {
+    "id": "1iFGRlffppviNpA4rqCNDJSwG8AupC6az",
+    "titulo": "Se a gente faz tudo da mesma forma",
+    "tag": "Reels",
+    "perfil": "perfil-1",
+    "destaque": false,
+    "poster": "/assets/conteudo/1iFGRlffppviNpA4rqCNDJSwG8AupC6az.webp"
+  },
+  {
+    "id": "1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4",
+    "titulo": "Se você ganhasse hoje na mega-sena",
+    "tag": "Reels",
+    "perfil": "perfil-1",
+    "destaque": false,
+    "poster": "/assets/conteudo/1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4.webp"
+  },
+  {
+    "id": "1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq",
+    "titulo": "A presença ou a promessa",
+    "tag": "Reels",
+    "perfil": "perfil-2",
+    "destaque": false,
+    "poster": "/assets/conteudo/1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq.webp"
+  },
+  {
+    "id": "104GDVCQdzovM7D534AfUHxEFa4T4mI6s",
+    "titulo": "Casa na rocha ou na areia",
+    "tag": "Reels",
+    "perfil": "perfil-2",
+    "destaque": false,
+    "poster": "/assets/conteudo/104GDVCQdzovM7D534AfUHxEFa4T4mI6s.webp"
+  },
+  {
+    "id": "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ",
+    "titulo": "Milagres",
+    "tag": "Reels",
+    "perfil": "perfil-2",
+    "destaque": false,
+    "poster": "/assets/conteudo/1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ.webp"
+  },
+  {
+    "id": "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX",
+    "titulo": "Salmos",
+    "tag": "Reels",
+    "perfil": "perfil-2",
+    "destaque": false,
+    "poster": "/assets/conteudo/1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX.webp"
+  },
+  {
+    "id": "1kRt86EVuJQasTUflWEGGBY68gqWIojNX",
+    "titulo": "Confiança no Senhor",
+    "tag": "Reels",
+    "perfil": "perfil-2",
+    "destaque": false,
+    "poster": "/assets/conteudo/1kRt86EVuJQasTUflWEGGBY68gqWIojNX.webp"
   }
 ];
