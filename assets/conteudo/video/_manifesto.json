@@ -1,0 +1,13 @@
+{
+  "1iFGRlffppviNpA4rqCNDJSwG8AupC6az.mp4": {
+    "id": "1iFGRlffppviNpA4rqCNDJSwG8AupC6az",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 81830863,
+    "bytes": 8720378
+  }
+}

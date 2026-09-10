@@ -2,9 +2,15 @@
 """
 Baixa os vídeos do Drive e os converte para arquivos que o site pode servir.
 
+Só entram os vídeos sem YouTube (campo `youtube` do galerias-data.js): esses
+tocam de lá. O resto o site serve daqui, para não depender do Drive.
+
 Os originais são masters de edição (o maior tem quase 1 GB); o que vai para o
-repositório é uma versão H.264 de qualidade visualmente idêntica e uma ordem de
-grandeza menor. O master baixado fica num cache fora do projeto.
+repositório é uma versão H.264 em 720p, ~20–30 MB por minuto. O master baixado
+fica num cache fora do projeto.
+
+Depois de rodar, o drive-sync.py preenche o campo `video` de cada peça que
+ganhou arquivo aqui.
 
 O trabalho é incremental: um _manifesto.json por pasta guarda qual id do Drive
 gerou cada arquivo e com que ajuste, então rodar de novo só refaz o que mudou.
@@ -24,26 +30,29 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 CACHE = Path("/tmp/filmora-video-cache")
 
-# CRF 18 no x264 é o patamar em que a diferença para o master deixa de ser
-# visível; preset slow gasta mais CPU e devolve o arquivo menor no mesmo CRF.
-CRF = 18
+# O arquivo vai para o GitHub (limite de 100 MB por arquivo) e é baixado por
+# visitante no celular. Medido num aftermovie: CRF 18 em 1080p dá ~15 Mbps
+# (1 min passa de 100 MB); CRF 23 em 720p dá ~4 Mbps (1 min ≈ 30 MB).
+# Preset slow gasta mais CPU e devolve o arquivo menor no mesmo CRF.
+CRF = 23
 PRESET = "slow"
-AUDIO_KBPS = 192
+AUDIO_KBPS = 128
 # O x264 abre ~1,5 thread por núcleo e cada uma segura seus quadros; num host
 # apertado de memória isso é o que faz o processo morrer no meio da conversão.
 # Não mexe na qualidade: com CRF o alvo é a qualidade, não a taxa.
 THREADS = 3
-# Master em 4K viraria um arquivo grande demais para um site; 1080p no lado maior
-# é o teto do que qualquer tela de visitante aproveita.
-LADO_MAIOR = 1920
+# 720p: o player do site ocupa no máximo 1100px de largura (ou 78vh de altura
+# no vertical), e 1080p dobraria o peso para um ganho pequeno nesse tamanho.
+LADO_MAIOR = 1280
 
 
 def videos_gerados():
-    """Lê js/galerias-data.js, que o drive-sync já deixou com as listas boas."""
+    """Lê js/galerias-data.js, que o drive-sync já deixou com as listas boas.
+    Vídeo com YouTube fica de fora: o site toca de lá."""
     js = (RAIZ / "js" / "galerias-data.js").read_text(encoding="utf-8")
     def lista(nome, fim):
         m = re.search(rf"window\.{nome} = (\[.*?\]);\n{fim}", js, re.S)
-        return json.loads(m.group(1)) if m else []
+        return [v for v in json.loads(m.group(1)) if not v.get("youtube")] if m else []
     return {
         "cobertura": lista("COBERTURA", r"window\.CONTEUDO"),
         "conteudo": lista("CONTEUDO", r"\Z"),
@@ -151,7 +160,8 @@ def sincronizar(grupo, videos, manter_master):
         if not manter_master:
             master.unlink(missing_ok=True)
 
-    # limpa sobras: vídeo que saiu do Drive e conversão interrompida
+    # limpa sobras: vídeo que saiu do Drive ou ganhou YouTube, e conversão
+    # interrompida
     validos = {f"{v['id']}.mp4" for v in videos}
     for arq in base.glob("*.mp4"):
         if arq.name not in validos:

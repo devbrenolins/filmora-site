@@ -175,10 +175,10 @@ function montarSecao(slug, alvo, secao) {
 montarSecao("making-of-noiva", "#galMakingOf", "#making-of");
 montarSecao("cerimonia-jaleco", "#galJaleco", "#jaleco");
 
-/* ── CARDS DE VÍDEO (cobertura e produção de conteúdo, hospedados no Drive) ── */
-function cardVideo(v, i, vertical = false) {
+/* ── CARDS DE VÍDEO (cobertura e produção de conteúdo) ── */
+function cardVideo(v, i, vertical = v.vertical) {
   return `
-  <article class="vid rv" data-drive="${v.id}"${vertical ? " data-vert" : ""} style="transition-delay:${i * 0.06}s">
+  <article class="vid rv" data-drive="${v.id}"${v.youtube ? ` data-yt="${v.youtube}"` : ""}${v.video ? ` data-video="${v.video}"` : ""}${vertical ? " data-vert" : ""} style="transition-delay:${i * 0.06}s">
     <div class="vid__poster">
       <img src="${v.poster}" alt="${v.titulo}, filmora" loading="lazy">
       ${v.destaque ? '<span class="vid__badge">Destaque</span>' : ""}
@@ -307,26 +307,42 @@ lb.addEventListener("touchend", (e) => {
 lbImg.style.transition = "opacity .4s ease";
 
 /* ── PLAYER DE VÍDEO ──
-   Todo vídeo é servido pelo Drive; o site guarda só o pôster. */
+   O vídeo toca do YouTube; o que não está lá o site serve do próprio arquivo
+   (tools/video-sync.py), e só na falta dos dois entra o player do Drive. */
 const vlb = $("#vlb"), vlbFrame = $("#vlbFrame");
-function abrirPlayer({ id, rotulo, vertical }) {
+function abrirPlayer({ id, yt, arquivo, poster, rotulo, vertical }) {
   /* reel em moldura 16/9 fica minúsculo no meio de duas tarjas pretas */
   vlbFrame.classList.toggle("vlb__frame--vert", !!vertical);
-  vlbFrame.innerHTML =
-    `<iframe src="https://drive.google.com/file/d/${id}/preview" title="${rotulo}, filmora"
-      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-     <a class="vlb__fallback" href="https://drive.google.com/file/d/${id}/view"
-        target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
   vlb.classList.add("is-open");
   vlb.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  if (arquivo) {
+    vlbFrame.innerHTML =
+      `<video src="${arquivo}" poster="${poster}" aria-label="${rotulo}, filmora"
+        controls playsinline preload="auto"></video>`;
+    /* play() ainda dentro do clique: é esse gesto que libera o som no iOS */
+    vlbFrame.querySelector("video").play().catch(() => {});
+    return;
+  }
+  const src = yt
+    ? `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&rel=0&playsinline=1`
+    : `https://drive.google.com/file/d/${id}/preview`;
+  const link = yt ? `https://youtu.be/${yt}` : `https://drive.google.com/file/d/${id}/view`;
+  vlbFrame.innerHTML =
+    `<iframe src="${src}" title="${rotulo}, filmora"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+     <a class="vlb__fallback" href="${link}"
+        target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
 }
 document.addEventListener("click", (e) => {
   const card = e.target.closest("[data-drive]");
   if (!card) return;
   abrirPlayer({
     id: card.dataset.drive,
+    yt: card.dataset.yt,
+    arquivo: card.dataset.video,
+    poster: card.querySelector("img")?.src || "",
     rotulo: card.querySelector(".vid__title")?.textContent || "Vídeo",
     vertical: card.hasAttribute("data-vert"),
   });

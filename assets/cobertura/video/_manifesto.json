@@ -1,0 +1,57 @@
+{
+  "1gOngPusctonXmINtlhpUbA2qUFhXxxn4.mp4": {
+    "id": "1gOngPusctonXmINtlhpUbA2qUFhXxxn4",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 1020126487,
+    "bytes": 17211166
+  },
+  "1zxt2Ed_n5c7LIglm0AxMZ0OG9sX_3U9n.mp4": {
+    "id": "1zxt2Ed_n5c7LIglm0AxMZ0OG9sX_3U9n",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 607159241,
+    "bytes": 18981406
+  },
+  "1kdFbnry1sywdeepLtlIwjCuojzvNckHg.mp4": {
+    "id": "1kdFbnry1sywdeepLtlIwjCuojzvNckHg",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 367974512,
+    "bytes": 13664510
+  },
+  "1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR.mp4": {
+    "id": "1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 418347170,
+    "bytes": 14661202
+  },
+  "1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK.mp4": {
+    "id": "1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 475438034,
+    "bytes": 18919311
+  }
+}

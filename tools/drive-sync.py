@@ -4,9 +4,10 @@ Sincroniza as galerias completas com as pastas do Google Drive.
 
 As fotos são BAIXADAS para assets/galerias/<slug>/ em duas versões WebP:
 full (1600px, lightbox) e thumb (700px, mosaico). O site não depende do CDN
-do Google em tempo de visita. Só os vídeos continuam no Drive, embutidos
-pelo player deles, então as pastas precisam seguir compartilhadas como
-"qualquer pessoa com o link" para o sync funcionar e os vídeos tocarem.
+do Google em tempo de visita. Os vídeos tocam do YouTube (mapa YOUTUBE); os
+que não estão lá o site serve convertidos pelo tools/video-sync.py, e só na
+falta dos dois o player do Drive entra. As pastas precisam seguir
+compartilhadas como "qualquer pessoa com o link" para o sync funcionar.
 
 O download é incremental: um _manifesto.json por álbum guarda qual id do
 Drive gerou cada arquivo, então rodar de novo só busca o que mudou.
@@ -134,6 +135,34 @@ TITULOS = {
     "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ": "Milagres",
     "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX": "Salmos",
     "1kRt86EVuJQasTUflWEGGBY68gqWIojNX": "Confiança no Senhor",
+}
+
+# Os vídeos tocam do YouTube. O Drive segue como origem do pôster e do título;
+# quem não está aqui o site serve do próprio arquivo (tools/video-sync.py).
+# id do arquivo no Drive → id do vídeo no YouTube
+YOUTUBE = {
+    "1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9": "ZOY_VQRFgBE",   # 01 Cobertura em tempo real
+    "1nf8DllgkyzA77R0Ht-_icTHIEXnQXw2A": "WJq5e_phYuw",   # 02 Nosso Sertão · Dia 2
+    "1_HQnBTbqvG7Uqa9OHzwZDA1fcj9YNFQH": "5HRBbv9nU9c",   # 03 Arraiá do Vaqueiro
+    "1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE": "8eFlNir1_yE",   # 09 Quanto o Senhor tem de nós
+    "1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg": "IpBZ7J7rvvA",   # 10 Se você fosse viajar
+    "1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2": "vJtkq10s4Mg",   # 11 Espírito de sabedoria e revelação
+    "1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg": "AauWakzIHPE",   # 12 Pois ele é a nossa paz
+    "1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4": "MV9LSdG66NU",   # 14 Se você ganhasse hoje na mega-sena
+    "1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq": "KC5ZLjCD3_E",   # 15 A presença ou a promessa
+    "104GDVCQdzovM7D534AfUHxEFa4T4mI6s": "iav54jgJCF8",   # 16 Casa na rocha ou na areia
+    "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ": "cz2yMEZPVNc",   # 17 Milagres
+    "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX": "JzGF5ON0pTE",   # 18 Salmos
+    "1kRt86EVuJQasTUflWEGGBY68gqWIojNX": "qjNuQplWKds",   # 19 Confiança no Senhor
+    # Servidos pelo site: 05 São João (1zxt2Ed_…) e 13 Se a gente faz tudo da
+    # mesma forma (1iFGRlff…), sem link no YouTube, e os 4 abaixo, que estão
+    # no YouTube mas o player embutido responde "Este vídeo não está
+    # disponível". Descomente quando voltarem a tocar (e rode o video-sync.py
+    # de novo: ele apaga o mp4 que deixou de ser usado).
+    # "1gOngPusctonXmINtlhpUbA2qUFhXxxn4": "MUk52JTRafM",   # 04 Katlin · 100K
+    # "1kdFbnry1sywdeepLtlIwjCuojzvNckHg": "JXIy0cSNSfQ",   # 06 Decoração São João 2026
+    # "1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR": "JYo2bwPTcac",   # 07 Nosso Sertão · Manim
+    # "1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK": "7z0X1sX7WdA",   # 08 Nalvinho
 }
 
 
@@ -339,8 +368,8 @@ def sincronizar_fotos(slug, ids, destaque=None):
 
 
 def sincronizar_posters(videos, pasta="cobertura"):
-    """Pôster de cada vídeo em assets/<pasta>/. O vídeo em si continua no
-    Drive; só a imagem de capa vem para cá."""
+    """Pôster de cada vídeo em assets/<pasta>/. O vídeo em si vem de outro
+    lugar (YouTube, video-sync.py ou Drive); aqui só a imagem de capa."""
     base = RAIZ / "assets" / pasta
     base.mkdir(parents=True, exist_ok=True)
     novos, falhas = 0, []
@@ -359,6 +388,16 @@ def sincronizar_posters(videos, pasta="cobertura"):
             destino, "WEBP", quality=QUALIDADE, method=6)
         novos += 1
     return novos, falhas
+
+
+def arquivos_locais(videos, pasta):
+    """Vídeo sem YouTube que o tools/video-sync.py já converteu é servido pelo
+    próprio site: o campo `video` aponta para o mp4. Quem não tem nenhum dos
+    dois ainda toca do Drive."""
+    base = RAIZ / "assets" / pasta / "video"
+    for v in videos:
+        if not v.get("youtube") and (base / f"{v['id']}.mp4").exists():
+            v["video"] = f"/assets/{pasta}/video/{v['id']}.mp4"
 
 
 def sincronizar_capa(fid, destino_rel, largura=1200):
@@ -450,7 +489,7 @@ def pagina(alb, VERSAO):
 def pagina_conteudo(VERSAO):
     """Página do serviço de produção de conteúdo (gerenciamento de perfil).
     Não usa o mosaico de fotos: o entregável aqui é vídeo vertical, então a
-    página monta os cards a partir de window.CONTEUDO e toca no player do Drive."""
+    página monta os cards a partir de window.CONTEUDO e toca no player do YouTube."""
     desc = ("Produção de conteúdo vertical para gerenciamento de perfil no Instagram: "
             "roteiro, captação, edição e entrega mensal de reels.")
     return f"""<!DOCTYPE html>
@@ -583,12 +622,21 @@ def main():
         for fid, nome in itens:
             videos.append({"id": fid,
                            "titulo": TITULOS.get(fid) or titulo_video(nome),
-                           "tag": grupo["tag"]})
+                           "tag": grupo["tag"],
+                           "youtube": YOUTUBE.get(fid)})
         print(f"  · vídeos {grupo['tag']}: {len(itens)}", file=sys.stderr)
 
     pn, pf = sincronizar_posters(videos)
     print(f"  · pôsteres de vídeo: {pn} baixados" +
           (f" · {len(pf)} FALHARAM" if pf else ""), file=sys.stderr)
+    # a cobertura mistura aftermovie deitado com stories em pé: o pôster diz
+    # qual é qual, e o player abre na moldura certa
+    for v2 in videos:
+        poster = RAIZ / v2["poster"].lstrip("/")
+        if poster.exists():
+            w, h = medir(poster)
+            v2["vertical"] = h > w
+    arquivos_locais(videos, "cobertura")
 
     # produção de conteúdo: só as peças verticais, com os destaques na frente
     conteudo = []
@@ -598,6 +646,7 @@ def main():
             conteudo.append({"id": fid,
                              "titulo": TITULOS.get(fid) or titulo_video(nome),
                              "tag": grupo["tag"],
+                             "youtube": YOUTUBE.get(fid),
                              "perfil": grupo["perfil"],
                              "destaque": fid in DESTAQUES})
         print(f"  · verticais {grupo['perfil']}: {len(itens)}", file=sys.stderr)
@@ -611,6 +660,7 @@ def main():
     cn, cf = sincronizar_posters(conteudo, pasta="conteudo")
     print(f"  · pôsteres de conteúdo: {cn} baixados" +
           (f" · {len(cf)} FALHARAM" if cf else ""), file=sys.stderr)
+    arquivos_locais(conteudo, "conteudo")
     if sincronizar_capa(CAPA_CONTEUDO, "assets/conteudo/capa.webp"):
         print("  · capa da seção de conteúdo baixada", file=sys.stderr)
 

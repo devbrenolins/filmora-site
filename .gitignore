@@ -3,3 +3,10 @@
 Thumbs.db
 *.log
 node_modules
+
+# lixo de build do Python
+__pycache__/
+*.pyc
+
+# conversão interrompida do tools/video-sync.py (o mp4 pronto vai para o site)
+assets/*/video/*.parcial

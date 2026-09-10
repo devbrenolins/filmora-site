@@ -1235,49 +1235,70 @@ window.COBERTURA = [
     "id": "1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9",
     "titulo": "Cobertura em tempo real",
     "tag": "Stories",
-    "poster": "/assets/cobertura/1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9.webp"
+    "youtube": "ZOY_VQRFgBE",
+    "poster": "/assets/cobertura/1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9.webp",
+    "vertical": true
   },
   {
     "id": "1nf8DllgkyzA77R0Ht-_icTHIEXnQXw2A",
     "titulo": "Nosso Sertão · Dia 2",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1nf8DllgkyzA77R0Ht-_icTHIEXnQXw2A.webp"
+    "youtube": "WJq5e_phYuw",
+    "poster": "/assets/cobertura/1nf8DllgkyzA77R0Ht-_icTHIEXnQXw2A.webp",
+    "vertical": false
   },
   {
     "id": "1_HQnBTbqvG7Uqa9OHzwZDA1fcj9YNFQH",
     "titulo": "Arraiá do Vaqueiro",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1_HQnBTbqvG7Uqa9OHzwZDA1fcj9YNFQH.webp"
+    "youtube": "5HRBbv9nU9c",
+    "poster": "/assets/cobertura/1_HQnBTbqvG7Uqa9OHzwZDA1fcj9YNFQH.webp",
+    "vertical": false
   },
   {
     "id": "1gOngPusctonXmINtlhpUbA2qUFhXxxn4",
     "titulo": "Katlin · 100K",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1gOngPusctonXmINtlhpUbA2qUFhXxxn4.webp"
+    "youtube": null,
+    "poster": "/assets/cobertura/1gOngPusctonXmINtlhpUbA2qUFhXxxn4.webp",
+    "vertical": true,
+    "video": "/assets/cobertura/video/1gOngPusctonXmINtlhpUbA2qUFhXxxn4.mp4"
   },
   {
     "id": "1zxt2Ed_n5c7LIglm0AxMZ0OG9sX_3U9n",
     "titulo": "São João",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1zxt2Ed_n5c7LIglm0AxMZ0OG9sX_3U9n.webp"
+    "youtube": null,
+    "poster": "/assets/cobertura/1zxt2Ed_n5c7LIglm0AxMZ0OG9sX_3U9n.webp",
+    "vertical": false,
+    "video": "/assets/cobertura/video/1zxt2Ed_n5c7LIglm0AxMZ0OG9sX_3U9n.mp4"
   },
   {
     "id": "1kdFbnry1sywdeepLtlIwjCuojzvNckHg",
     "titulo": "Decoração São João 2026",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1kdFbnry1sywdeepLtlIwjCuojzvNckHg.webp"
+    "youtube": null,
+    "poster": "/assets/cobertura/1kdFbnry1sywdeepLtlIwjCuojzvNckHg.webp",
+    "vertical": false,
+    "video": "/assets/cobertura/video/1kdFbnry1sywdeepLtlIwjCuojzvNckHg.mp4"
   },
   {
     "id": "1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR",
     "titulo": "Nosso Sertão · Manim",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR.webp"
+    "youtube": null,
+    "poster": "/assets/cobertura/1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR.webp",
+    "vertical": false,
+    "video": "/assets/cobertura/video/1cu5ZGkXLSZ_-1LRwo_UQavNrPqtx2pmR.mp4"
   },
   {
     "id": "1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK",
     "titulo": "Nalvinho",
     "tag": "Aftermovie",
-    "poster": "/assets/cobertura/1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK.webp"
+    "youtube": null,
+    "poster": "/assets/cobertura/1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK.webp",
+    "vertical": false,
+    "video": "/assets/cobertura/video/1uX62sZTJ__h_7PBMqFFRE3eRQd-yMCKK.mp4"
   }
 ];
 window.CONTEUDO = [
@@ -1285,6 +1306,7 @@ window.CONTEUDO = [
     "id": "1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE",
     "titulo": "Quanto o Senhor tem de nós",
     "tag": "Reels",
+    "youtube": "8eFlNir1_yE",
     "perfil": "perfil-2",
     "destaque": true,
     "poster": "/assets/conteudo/1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE.webp"
@@ -1293,6 +1315,7 @@ window.CONTEUDO = [
     "id": "1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg",
     "titulo": "Se você fosse viajar",
     "tag": "Reels",
+    "youtube": "IpBZ7J7rvvA",
     "perfil": "perfil-1",
     "destaque": true,
     "poster": "/assets/conteudo/1zI72lTOpJvnCZVoRfCG9g3mD2Iw2iohg.webp"
@@ -1301,6 +1324,7 @@ window.CONTEUDO = [
     "id": "1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2",
     "titulo": "Espírito de sabedoria e revelação",
     "tag": "Reels",
+    "youtube": "vJtkq10s4Mg",
     "perfil": "perfil-1",
     "destaque": false,
     "poster": "/assets/conteudo/1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2.webp"
@@ -1309,6 +1333,7 @@ window.CONTEUDO = [
     "id": "1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg",
     "titulo": "Pois ele é a nossa paz",
     "tag": "Reels",
+    "youtube": "AauWakzIHPE",
     "perfil": "perfil-1",
     "destaque": false,
     "poster": "/assets/conteudo/1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg.webp"
@@ -1317,14 +1342,17 @@ window.CONTEUDO = [
     "id": "1iFGRlffppviNpA4rqCNDJSwG8AupC6az",
     "titulo": "Se a gente faz tudo da mesma forma",
     "tag": "Reels",
+    "youtube": null,
     "perfil": "perfil-1",
     "destaque": false,
-    "poster": "/assets/conteudo/1iFGRlffppviNpA4rqCNDJSwG8AupC6az.webp"
+    "poster": "/assets/conteudo/1iFGRlffppviNpA4rqCNDJSwG8AupC6az.webp",
+    "video": "/assets/conteudo/video/1iFGRlffppviNpA4rqCNDJSwG8AupC6az.mp4"
   },
   {
     "id": "1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4",
     "titulo": "Se você ganhasse hoje na mega-sena",
     "tag": "Reels",
+    "youtube": "MV9LSdG66NU",
     "perfil": "perfil-1",
     "destaque": false,
     "poster": "/assets/conteudo/1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4.webp"
@@ -1333,6 +1361,7 @@ window.CONTEUDO = [
     "id": "1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq",
     "titulo": "A presença ou a promessa",
     "tag": "Reels",
+    "youtube": "KC5ZLjCD3_E",
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq.webp"
@@ -1341,6 +1370,7 @@ window.CONTEUDO = [
     "id": "104GDVCQdzovM7D534AfUHxEFa4T4mI6s",
     "titulo": "Casa na rocha ou na areia",
     "tag": "Reels",
+    "youtube": "iav54jgJCF8",
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/104GDVCQdzovM7D534AfUHxEFa4T4mI6s.webp"
@@ -1349,6 +1379,7 @@ window.CONTEUDO = [
     "id": "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ",
     "titulo": "Milagres",
     "tag": "Reels",
+    "youtube": "cz2yMEZPVNc",
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ.webp"
@@ -1357,6 +1388,7 @@ window.CONTEUDO = [
     "id": "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX",
     "titulo": "Salmos",
     "tag": "Reels",
+    "youtube": "JzGF5ON0pTE",
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX.webp"
@@ -1365,6 +1397,7 @@ window.CONTEUDO = [
     "id": "1kRt86EVuJQasTUflWEGGBY68gqWIojNX",
     "titulo": "Confiança no Senhor",
     "tag": "Reels",
+    "youtube": "qjNuQplWKds",
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/1kRt86EVuJQasTUflWEGGBY68gqWIojNX.webp"

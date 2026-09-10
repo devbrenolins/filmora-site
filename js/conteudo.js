@@ -32,7 +32,7 @@ const PECAS = window.CONTEUDO || [];
 
 function cardVideo(v, i) {
   return `
-  <article class="vid" data-drive="${v.id}" style="transition-delay:${i * 0.06}s">
+  <article class="vid" data-drive="${v.id}"${v.youtube ? ` data-yt="${v.youtube}"` : ""}${v.video ? ` data-video="${v.video}"` : ""} style="transition-delay:${i * 0.06}s">
     <div class="vid__poster">
       <img src="${v.poster}" alt="${v.titulo}, produção de conteúdo filmora" loading="lazy">
       ${v.destaque ? '<span class="vid__badge">Destaque</span>' : ""}
@@ -59,20 +59,34 @@ function montarGrade() {
 }
 
 /* ── player em moldura vertical ──
-   Todo vídeo é servido pelo Drive; o site guarda só o pôster. */
+   O vídeo toca do YouTube; o que não está lá o site serve do próprio arquivo
+   (tools/video-sync.py), e só na falta dos dois entra o player do Drive. */
 function montarPlayer() {
   const vlb = $("#vlb"), frame = $("#vlbFrame");
   function abrir(card, rotulo) {
-    const id = card.dataset.drive;
-    frame.innerHTML =
-      `<iframe src="https://drive.google.com/file/d/${id}/preview" title="${rotulo}, filmora"
-        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-       <a class="vlb__fallback" href="https://drive.google.com/file/d/${id}/view"
-          target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
+    const { drive: id, yt, video: arquivo } = card.dataset;
     vlb.classList.add("is-open");
     vlb.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+    if (arquivo) {
+      const poster = card.querySelector("img")?.src || "";
+      frame.innerHTML =
+        `<video src="${arquivo}" poster="${poster}" aria-label="${rotulo}, filmora"
+          controls playsinline preload="auto"></video>`;
+      /* play() ainda dentro do clique: é esse gesto que libera o som no iOS */
+      frame.querySelector("video").play().catch(() => {});
+      return;
+    }
+    const src = yt
+      ? `https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&rel=0&playsinline=1`
+      : `https://drive.google.com/file/d/${id}/preview`;
+    const link = yt ? `https://youtu.be/${yt}` : `https://drive.google.com/file/d/${id}/view`;
+    frame.innerHTML =
+      `<iframe src="${src}" title="${rotulo}, filmora"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+       <a class="vlb__fallback" href="${link}"
+          target="_blank" rel="noopener">Não carregou? Abrir em nova aba →</a>`;
   }
   function fechar() {
     vlb.classList.remove("is-open");

@@ -44,12 +44,21 @@ com o link"). O download é incremental.
 python3 tools/drive-sync.py    # fotos, páginas e js/galerias-data.js
 ```
 
-Vídeo o site não hospeda: do Drive vem só o pôster, e o player abre o arquivo
-no próprio Drive (`/preview`, com link para nova aba se o iframe não carregar).
+Do Drive vem só o pôster e o título dos vídeos. O player toca, nesta ordem:
 
-O `tools/video-sync.py` baixa os masters e os converte para arquivos servidos
-pelo site — fluxo hoje desligado, mantido para o dia em que valer a pena tirar
-os vídeos do Drive.
+1. **YouTube**: mapa `YOUTUBE` no `drive-sync.py` (id do Drive → id do YouTube).
+2. **Arquivo do próprio site**: o que não está no YouTube o `tools/video-sync.py`
+   baixa do Drive e converte para H.264 720p (~20–30 MB por minuto), em
+   `assets/<cobertura|conteudo>/video/`.
+3. **Drive** (`/preview`): só se nenhum dos dois existir.
+
+```bash
+python3 tools/video-sync.py    # baixa e converte os vídeos sem YouTube
+python3 tools/drive-sync.py    # depois: marca no site os que ganharam arquivo
+```
+
+Quando um vídeo entra no mapa `YOUTUBE`, rodar o `video-sync.py` de novo apaga
+o mp4 que ele deixou de usar.
 
 ## Rodar localmente
 
