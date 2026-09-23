@@ -1,6 +1,6 @@
 # filmora
 
-Site institucional da **filmora**, agência de produção audiovisual especializada em
+Site institucional da **filmora**, produtora audiovisual especializada em
 fotografia e filmes de **casamentos** e **eventos**.
 
 🌐 Produção: https://filmora-black.vercel.app

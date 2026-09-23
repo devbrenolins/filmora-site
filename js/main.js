@@ -36,7 +36,7 @@ const SECTIONS = [
     desc: "Formatura e vida acadêmica registradas por inteiro." },
   { slug: "cobertura", name: "Cobertura de Eventos", active: true, target: "#cobertura",
     cover: "assets/cobertura/1gOngPusctonXmINtlhpUbA2qUFhXxxn4.webp",
-    desc: "Stories e Aftermovies." },
+    desc: "Aftermovies do seu evento." },
   { slug: "social", name: "Gestão de Redes Sociais", active: true, target: "#conteudo",
     cover: "assets/conteudo/capa.webp",
     desc: "Reels verticais produzidos em lote para o seu perfil." },
@@ -54,7 +54,7 @@ const SECTIONS = [
 
 /* ── dados das galerias ── */
 const CASAMENTO = [
-  353, 335, 306, 20, 313, 90, 331, 25, 322, 7, 344, 185,
+  353, 335, 306, 313, 90, 331, 322, 7, 344, 185,
   234, 326, 95, 347, 329, 14, 339, 92, 311, 356, 183, 327,
   6, 100, 232, 345, 354, 185,
 ].filter((v, i, a) => a.indexOf(v) === i)
@@ -75,21 +75,23 @@ const EVENTOS = [
     tag: "festa country",
     dir: "assets/eventos/cinquenta",
     galeria: GALERIA.cinquenta,
-    imgs: ["c50-000", "c50-008", "c50-002", "c50-007", "c50-009", "c50-012"],
+    imgs: ["c50-000", "c50-002", "c50-007", "c50-008", "c50-009", "c50-012"],
   },
   {
     name: "Festa Menina",
     tag: "2 anos · fazendinha",
-    dir: "assets/eventos/infantil-rosa",
+    // prévia só com a aniversariante e a família, direto da galeria completa
+    dir: "assets/galerias/festa-menina/full",
+    ext: "webp",
     galeria: GALERIA.menina,
-    imgs: ["rosa-013", "rosa-005", "rosa-000", "rosa-004", "rosa-015", "rosa-003"],
+    imgs: ["002", "004", "005", "001", "006", "003"],
   },
   {
     name: "Festa Menino",
     tag: "festa temática · cowboy",
     dir: "assets/eventos/infantil-cowboy",
     galeria: GALERIA.menino,
-    imgs: ["cow-002", "cow-000", "cow-009", "cow-012", "cow-005", "cow-001"],
+    imgs: ["cow-002", "cow-009", "cow-012", "cow-001", "cow-000", "cow-005"],
   },
 ];
 const LAYOUT = ["e-a", "e-b", "e-c", "e-d", "e-e", "e-f"];
@@ -123,7 +125,7 @@ $("#themeToggle").addEventListener("click", () => {
   root.setAttribute("data-theme", next);
   try { localStorage.setItem("filmora-theme", next); } catch (e) {}
   document.querySelector('meta[name="theme-color"]')
-    .setAttribute("content", next === "dark" ? "#110f0c" : "#f7f4ef");
+    .setAttribute("content", next === "dark" ? "#0a0a0a" : "#ffffff");
 });
 
 /* ── ÁLBUNS (visitante escolhe → abre o carrossel) ── */
@@ -137,7 +139,7 @@ const ALBUMS = {
   ...Object.fromEntries(Object.entries(NOVOS).filter(([, a]) => a)),
   // Eventos
   ...Object.fromEntries(EVENTOS.map((ev) => {
-    const photos = ev.imgs.map(n => `${ev.dir}/${n}.jpg`);
+    const photos = ev.imgs.map(n => `${ev.dir}/${n}.${ev.ext || "jpg"}`);
     return [ev.dir, { title: ev.name, tag: ev.tag, cover: photos[0], photos, galeria: ev.galeria }];
   })),
 };
@@ -226,6 +228,8 @@ if (CONTEUDO.length) {
     previaEquilibrada(CONTEUDO, PREVIA_CONTEUDO).map((v, i) => cardVideo(v, i, true)).join("");
   if (CONTEUDO.length > PREVIA_CONTEUDO) {
     $("#conteudoMais").textContent = `Ver todas as ${CONTEUDO.length} peças`;
+  } else {
+    $("#conteudoMais").textContent = "Conheça o serviço";
   }
 } else {
   $("#conteudo")?.remove();

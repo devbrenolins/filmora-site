@@ -25,7 +25,7 @@ window.GALERIAS = {
       [
         "003.webp",
         700,
-        467
+        1050
       ],
       [
         "004.webp",
@@ -35,17 +35,17 @@ window.GALERIAS = {
       [
         "005.webp",
         700,
-        467
+        1050
       ],
       [
         "006.webp",
         700,
-        1050
+        467
       ],
       [
         "007.webp",
         700,
-        1050
+        467
       ],
       [
         "008.webp",
@@ -60,7 +60,7 @@ window.GALERIAS = {
       [
         "010.webp",
         700,
-        467
+        1050
       ],
       [
         "011.webp",
@@ -90,17 +90,17 @@ window.GALERIAS = {
       [
         "016.webp",
         700,
-        1050
+        467
       ],
       [
         "017.webp",
         700,
-        1050
+        467
       ],
       [
         "018.webp",
         700,
-        1050
+        467
       ],
       [
         "019.webp",
@@ -110,7 +110,7 @@ window.GALERIAS = {
       [
         "020.webp",
         700,
-        467
+        1050
       ],
       [
         "021.webp",
@@ -135,7 +135,7 @@ window.GALERIAS = {
       [
         "025.webp",
         700,
-        467
+        1050
       ],
       [
         "026.webp",
@@ -150,17 +150,17 @@ window.GALERIAS = {
       [
         "028.webp",
         700,
-        1050
+        467
       ],
       [
         "029.webp",
         700,
-        1050
+        467
       ],
       [
         "030.webp",
         700,
-        467
+        1050
       ],
       [
         "031.webp",
@@ -180,22 +180,22 @@ window.GALERIAS = {
       [
         "034.webp",
         700,
-        1050
+        467
       ],
       [
         "035.webp",
         700,
-        467
+        1050
       ],
       [
         "036.webp",
         700,
-        467
+        1050
       ],
       [
         "037.webp",
         700,
-        467
+        1050
       ],
       [
         "038.webp",
@@ -205,17 +205,17 @@ window.GALERIAS = {
       [
         "039.webp",
         700,
-        1050
+        467
       ],
       [
         "040.webp",
         700,
-        1050
+        467
       ],
       [
         "041.webp",
         700,
-        1050
+        467
       ],
       [
         "042.webp",
@@ -235,30 +235,10 @@ window.GALERIAS = {
       [
         "045.webp",
         700,
-        467
-      ],
-      [
-        "046.webp",
-        700,
-        467
-      ],
-      [
-        "047.webp",
-        700,
-        467
-      ],
-      [
-        "048.webp",
-        700,
-        467
-      ],
-      [
-        "049.webp",
-        700,
         1050
       ],
       [
-        "050.webp",
+        "046.webp",
         700,
         467
       ]
@@ -284,7 +264,7 @@ window.GALERIAS = {
       [
         "003.webp",
         700,
-        1050
+        467
       ],
       [
         "004.webp",
@@ -294,17 +274,17 @@ window.GALERIAS = {
       [
         "005.webp",
         700,
-        1050
+        467
       ],
       [
         "006.webp",
         700,
-        1050
+        467
       ],
       [
         "007.webp",
         700,
-        467
+        1050
       ],
       [
         "008.webp",
@@ -329,12 +309,12 @@ window.GALERIAS = {
       [
         "012.webp",
         700,
-        1050
+        467
       ],
       [
         "013.webp",
         700,
-        467
+        1050
       ],
       [
         "014.webp",
@@ -344,7 +324,7 @@ window.GALERIAS = {
       [
         "015.webp",
         700,
-        467
+        1050
       ],
       [
         "016.webp",
@@ -354,37 +334,12 @@ window.GALERIAS = {
       [
         "017.webp",
         700,
-        467
+        1050
       ],
       [
         "018.webp",
         700,
         467
-      ],
-      [
-        "019.webp",
-        700,
-        467
-      ],
-      [
-        "020.webp",
-        700,
-        1050
-      ],
-      [
-        "021.webp",
-        700,
-        1050
-      ],
-      [
-        "022.webp",
-        700,
-        1050
-      ],
-      [
-        "023.webp",
-        700,
-        1050
       ]
     ]
   },
@@ -398,22 +353,22 @@ window.GALERIAS = {
       [
         "001.webp",
         700,
-        1050
+        467
       ],
       [
         "002.webp",
         700,
-        467
+        1050
       ],
       [
         "003.webp",
         700,
-        1050
+        467
       ],
       [
         "004.webp",
         700,
-        467
+        1050
       ],
       [
         "005.webp",
@@ -423,7 +378,7 @@ window.GALERIAS = {
       [
         "006.webp",
         700,
-        467
+        505
       ],
       [
         "007.webp",
@@ -433,32 +388,32 @@ window.GALERIAS = {
       [
         "008.webp",
         700,
-        505
+        494
       ],
       [
         "009.webp",
         700,
-        1050
+        467
       ],
       [
         "010.webp",
         700,
-        494
+        473
       ],
       [
         "011.webp",
         700,
-        467
+        484
       ],
       [
         "012.webp",
         700,
-        473
+        1050
       ],
       [
         "013.webp",
         700,
-        484
+        467
       ]
     ]
   },
@@ -1232,14 +1187,6 @@ window.GALERIAS = {
 };
 window.COBERTURA = [
   {
-    "id": "1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9",
-    "titulo": "Cobertura em tempo real",
-    "tag": "Stories",
-    "youtube": "ZOY_VQRFgBE",
-    "poster": "/assets/cobertura/1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9.webp",
-    "vertical": true
-  },
-  {
     "id": "1nf8DllgkyzA77R0Ht-_icTHIEXnQXw2A",
     "titulo": "Nosso Sertão · Dia 2",
     "tag": "Aftermovie",
@@ -1330,34 +1277,6 @@ window.CONTEUDO = [
     "poster": "/assets/conteudo/1R1GhuzJSN8VuIxyDY2aLJUHKDeh8ciW2.webp"
   },
   {
-    "id": "1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg",
-    "titulo": "Pois ele é a nossa paz",
-    "tag": "Reels",
-    "youtube": "AauWakzIHPE",
-    "perfil": "perfil-1",
-    "destaque": false,
-    "poster": "/assets/conteudo/1rJLW3Gcp2BTI4wpvQfg2XyTOI0GQawLg.webp"
-  },
-  {
-    "id": "1iFGRlffppviNpA4rqCNDJSwG8AupC6az",
-    "titulo": "Se a gente faz tudo da mesma forma",
-    "tag": "Reels",
-    "youtube": null,
-    "perfil": "perfil-1",
-    "destaque": false,
-    "poster": "/assets/conteudo/1iFGRlffppviNpA4rqCNDJSwG8AupC6az.webp",
-    "video": "/assets/conteudo/video/1iFGRlffppviNpA4rqCNDJSwG8AupC6az.mp4"
-  },
-  {
-    "id": "1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4",
-    "titulo": "Se você ganhasse hoje na mega-sena",
-    "tag": "Reels",
-    "youtube": "MV9LSdG66NU",
-    "perfil": "perfil-1",
-    "destaque": false,
-    "poster": "/assets/conteudo/1UMzp7J--x0jTUsnKQHXPSTAYWsVczPE4.webp"
-  },
-  {
     "id": "1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq",
     "titulo": "A presença ou a promessa",
     "tag": "Reels",
@@ -1365,41 +1284,5 @@ window.CONTEUDO = [
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq.webp"
-  },
-  {
-    "id": "104GDVCQdzovM7D534AfUHxEFa4T4mI6s",
-    "titulo": "Casa na rocha ou na areia",
-    "tag": "Reels",
-    "youtube": "iav54jgJCF8",
-    "perfil": "perfil-2",
-    "destaque": false,
-    "poster": "/assets/conteudo/104GDVCQdzovM7D534AfUHxEFa4T4mI6s.webp"
-  },
-  {
-    "id": "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ",
-    "titulo": "Milagres",
-    "tag": "Reels",
-    "youtube": "cz2yMEZPVNc",
-    "perfil": "perfil-2",
-    "destaque": false,
-    "poster": "/assets/conteudo/1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ.webp"
-  },
-  {
-    "id": "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX",
-    "titulo": "Salmos",
-    "tag": "Reels",
-    "youtube": "JzGF5ON0pTE",
-    "perfil": "perfil-2",
-    "destaque": false,
-    "poster": "/assets/conteudo/1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX.webp"
-  },
-  {
-    "id": "1kRt86EVuJQasTUflWEGGBY68gqWIojNX",
-    "titulo": "Confiança no Senhor",
-    "tag": "Reels",
-    "youtube": "qjNuQplWKds",
-    "perfil": "perfil-2",
-    "destaque": false,
-    "poster": "/assets/conteudo/1kRt86EVuJQasTUflWEGGBY68gqWIojNX.webp"
   }
 ];

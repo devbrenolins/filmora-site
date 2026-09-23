@@ -39,6 +39,13 @@ ALBUNS = [
         "pasta": "1hdrdsNgBVLONDXd5ekdoEs9zQAky0O98",
         "limite": 50,    # a pasta tem 441; a galeria mostra 50 espalhadas pelo dia
         "destaque": "assets/casamento/cas-347.jpg",   # abre a galeria em largura cheia
+        # fotos de comida (bolo e doces): o cliente não quer no portfólio
+        "excluir": {
+            "1skhwG33CweubXHUVnKdYY2-afG1wsP_3",   # mesa do bolo
+            "1O9xuzpT42JD4KjBNa2JJDu8n1W3_t53P",   # bolo
+            "1xE12y1O7VsG9-nSAUF3wY-WlUMVBOpqS",   # doces
+            "1rMFvcbMPSxZLyqfm1LNmrydu0PAH1CB2",   # doces
+        },
     },
     {
         "slug": "festa-menina",
@@ -47,6 +54,23 @@ ALBUNS = [
         "descricao": "A galeria completa da festa de 2 anos com tema fazendinha.",
         "secao": "eventos",
         "pasta": "1GzvdDRYi5_FK8spfgpNOBOYYhbNE3r5-",     # Aniversários/Menina
+        # convidadas (mulher de saia verde e a filha), não a família: fora
+        "excluir": {
+            "1Vvq76t1t5GzUGsr3JTehy3gAk2uPH5Qd",
+            "1C3kOgihoxNkbfbFD7lkWu0oPfRpRjCgB",
+            "1Z-R1ZCLNs5YYIiRL-quy6xdvnKy-HW3q",
+            "1xgxbGXlV8AcXNVqEA_EgG_Hkz9If06jl",
+            "1-hdTo9y2KOjtByFopE0r9iMkpt802oXY",
+        },
+        # pessoas antes da decoração e dos doces
+        "primeiro": [
+            "1_s41rhvEquBJCL64C6O_Zp1kyIeESqmF",   # aniversariante
+            "1E4HmjuC7xrePkcE4KBZiXbrH7XUSIa5M",   # aniversariante
+            "1AdwF_rTB5L_P4205ziiBkXNx9_LW5JdD",   # com a mãe
+            "1ykEUC8fggP-_L7rUBRRF0Jfcd9IM65DW",   # com a mãe
+            "1QO9EwxFwYZjrpab51By9si3gTppMQ8Qe",   # família
+            "1oZAYxxVrsWngzIkh_djJCua1Y46ZwL-i",   # família
+        ],
     },
     {
         "slug": "festa-menino",
@@ -55,6 +79,20 @@ ALBUNS = [
         "descricao": "A galeria completa do aniversário com tema cowboy.",
         "secao": "eventos",
         "pasta": "1xltY1b3J0gYyMnE2WjpIU84T1Nli7spp",     # Aniversários/MENINO
+        # pessoas antes das duas fotos do bolo
+        "primeiro": [
+            "1q8WKc1PInf2GTTwewqXaqyuFB8uYRf-g",
+            "1aOZ9bznwAyfuKk0N3HJ_yLHwrTmXNErj",
+            "12kg1ntrLWdCcVNvNd5GoPVW5eF1Avf4e",
+            "1A41JcJuK987ZXXzym_JRr83I50MV_Wil",
+            "1lQM9T8-Pibg3gHlrTYiUtuZjfuFUtAud",
+            "1hEvYVpA2_dYNaE2N9jdv5fvFA6OMbOrA",
+            "1LafnO9_qS9q_cTvM345rEQBPK0Ih5xr1",
+            "1j2mWTWu8PsoqC1IiQHa3tV2b26U_uVZy",
+            "1PSp6mOEQSJBR8CUIFQNVAKLxlUIUnYKb",
+            "14K1sSsrBIl13Hl7AgqDrCqJf9gnkwv4q",
+            "1Fr444-jERIVz47-mQKQLJTkY8Jyhlu2S",
+        ],
     },
     {
         "slug": "50-anos",
@@ -90,6 +128,11 @@ VIDEOS = [
     {"tag": "Aftermovie", "pasta": "1UtTI_vtJ_KgUN9xUUesikYKFQc0p1CjI", "recursivo": True},
 ]
 
+# vídeos das pastas que não entram no site (id do arquivo no Drive)
+VIDEOS_FORA = {
+    "1lT6iByyyU4I3swXOqr_C4xEn2Ovq4FI9",   # "Cobertura em tempo real": o cliente disse que não é esse o material
+}
+
 # ── produção de conteúdo para gerenciamento de perfil ───────────────────────
 # O entregável desse serviço é o feed do cliente, então aqui entra só o que é
 # vertical: as pastas têm as mesmas peças em corte horizontal (YouTube), que
@@ -101,6 +144,9 @@ VERTICAIS = [
     {"tag": "Reels", "perfil": "perfil-1", "pasta": "1dEFngtdFq9p15WuUDsV2hIaMmqNnZD49"},   # .../Vídeos/Verticais (rede social)
     {"tag": "Reels", "perfil": "perfil-2", "pasta": "1Ibac3A-iUQUwvzKvYt5xtCYmUxnR-yCt"},   # .../Vídeos Verticais (Instagram)
 ]
+
+# quantas peças de cada perfil entram no site (destaques primeiro)
+POR_PERFIL = 2
 
 # peças que abrem a seção, na ordem
 DESTAQUES = [
@@ -247,7 +293,7 @@ NAV = """<header class="nav" id="nav">
       <svg class="theme__sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
       <svg class="theme__moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8Z"/></svg>
     </button>
-    <a href="/#contato" class="nav__cta">Orçamento</a>
+    <a href="https://wa.me/5575997083386?text=Ol%C3%A1%20filmora!%20Gostaria%20de%20um%20or%C3%A7amento." target="_blank" rel="noopener" class="nav__cta">Orçamento</a>
   </div>
   <button class="nav__burger" id="burger" aria-label="menu"><span></span><span></span></button>
 </header>"""
@@ -255,7 +301,7 @@ NAV = """<header class="nav" id="nav">
 RODAPE = """<footer class="footer">
   <img class="footer__logo" src="/assets/logo-ink.png" alt="filmora">
   <p class="footer__tag">Fotografia &amp; Filmes para as histórias que merecem ficar.</p>
-  <p class="footer__copy">© 2026 filmora · Agência de Produção Audiovisual</p>
+  <p class="footer__copy">© 2026 filmora · Produtora Audiovisual</p>
   <a class="byline" href="https://infusesoftware.com/" target="_blank" rel="noopener">
     Desenvolvido por
     <span class="byline__logo">
@@ -325,6 +371,18 @@ def sincronizar_fotos(slug, ids, destaque=None):
 
     nomes, novos, falhas = [], 0, []
 
+    # Quando sai uma foto do meio, as seguintes mudam de número. O arquivo já
+    # baixado é reaproveitado pelo id do Drive em vez de baixar tudo de novo.
+    reuso = base / "_reuso"
+    reuso.mkdir(exist_ok=True)
+    for nome, fid in list(manifesto.items()):
+        if "/" in fid:          # a foto de destaque é arquivo local, fica onde está
+            continue
+        if (dir_full / nome).exists() and (dir_thumb / nome).exists():
+            (dir_full / nome).rename(reuso / f"{fid}.full")
+            (dir_thumb / nome).rename(reuso / f"{fid}.thumb")
+        manifesto.pop(nome)
+
     # 000 é a foto de destaque: arquivo local, não vem do Drive
     if destaque:
         origem = RAIZ / destaque
@@ -343,9 +401,10 @@ def sincronizar_fotos(slug, ids, destaque=None):
 
     for i, fid in enumerate(ids, 1):
         nome = f"{i:03d}.webp"
-        ja_tem = (manifesto.get(nome) == fid
-                  and (dir_full / nome).exists() and (dir_thumb / nome).exists())
-        if ja_tem:
+        if (reuso / f"{fid}.full").exists() and (reuso / f"{fid}.thumb").exists():
+            (reuso / f"{fid}.full").rename(dir_full / nome)
+            (reuso / f"{fid}.thumb").rename(dir_thumb / nome)
+            manifesto[nome] = fid
             nomes.append([nome, *medir(dir_thumb / nome)])
             continue
         dados = baixar_imagem(fid, LARGURA_GRANDE)
@@ -363,6 +422,9 @@ def sincronizar_fotos(slug, ids, destaque=None):
         if arq.name not in validos:
             arq.unlink()
             manifesto.pop(arq.name, None)
+    for arq in reuso.iterdir():
+        arq.unlink()
+    reuso.rmdir()
     manifesto_arq.write_text(json.dumps(manifesto, indent=2), encoding="utf-8")
     return nomes, novos, falhas
 
@@ -428,7 +490,7 @@ def pagina(alb, VERSAO):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{titulo}: Galeria completa | filmora</title>
 <meta name="description" content="{desc}">
-<meta name="theme-color" content="#f7f4ef">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="/assets/logo.jpg">
 <meta property="og:title" content="{titulo}: Galeria completa | filmora">
 <meta property="og:description" content="{desc}">
@@ -499,7 +561,7 @@ def pagina_conteudo(VERSAO):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Produção de Conteúdo para Instagram | filmora</title>
 <meta name="description" content="{desc}">
-<meta name="theme-color" content="#f7f4ef">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="/assets/logo.jpg">
 <meta property="og:title" content="Produção de Conteúdo para Instagram | filmora">
 <meta property="og:description" content="{desc}">
@@ -533,12 +595,6 @@ def pagina_conteudo(VERSAO):
   </div>
 
   <section class="conteudo__bloco">
-    <h2 class="conteudo__rotulo">Em destaque</h2>
-    <div class="vids vids--vert vids--destaque" id="conteudoDestaques"></div>
-  </section>
-
-  <section class="conteudo__bloco">
-    <h2 class="conteudo__rotulo">Outras peças</h2>
     <div class="vids vids--vert" id="conteudoGrid"></div>
   </section>
 
@@ -582,7 +638,11 @@ def main():
             print(f"  ! {alb['slug']}: nenhuma foto encontrada; a pasta está pública?",
                   file=sys.stderr)
             continue
-        itens = amostrar(todas, alb.get("limite"))
+        # exclui depois de amostrar: tirar uma foto não troca as outras
+        itens = [i for i in amostrar(todas, alb.get("limite"))
+                 if i[0] not in alb.get("excluir", ())]
+        ordem = {fid: n for n, fid in enumerate(alb.get("primeiro", []))}
+        itens.sort(key=lambda i: ordem.get(i[0], len(ordem)))
         nomes, novos, falhas = sincronizar_fotos(
             alb["slug"], [fid for fid, _ in itens], alb.get("destaque"))
         dados[alb["slug"]] = {
@@ -620,6 +680,8 @@ def main():
         itens = listar_pasta(grupo["pasta"], exts=r"mp4|mov|m4v|webm",
                              recursivo=grupo["recursivo"])
         for fid, nome in itens:
+            if fid in VIDEOS_FORA:
+                continue
             videos.append({"id": fid,
                            "titulo": TITULOS.get(fid) or titulo_video(nome),
                            "tag": grupo["tag"],
@@ -653,6 +715,10 @@ def main():
     # destaques na frente; o resto segue a ordem das pastas, um lote por perfil
     ordem = {fid: i for i, fid in enumerate(DESTAQUES)}
     conteudo.sort(key=lambda v2: ordem.get(v2["id"], len(DESTAQUES)))
+    por_perfil = {}
+    conteudo = [v2 for v2 in conteudo
+                if por_perfil.setdefault(v2["perfil"], []).append(v2) is None
+                and len(por_perfil[v2["perfil"]]) <= POR_PERFIL]
     faltando = [d for d in DESTAQUES if d not in {v2["id"] for v2 in conteudo}]
     if faltando:
         print(f"  ! destaque(s) fora das pastas verticais: {faltando}", file=sys.stderr)

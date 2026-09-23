@@ -185,7 +185,7 @@ function montarNav() {
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("filmora-theme", next); } catch (e) {}
     document.querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", next === "dark" ? "#110f0c" : "#f7f4ef");
+      ?.setAttribute("content", next === "dark" ? "#0a0a0a" : "#ffffff");
   });
 }
 

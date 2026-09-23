@@ -22,7 +22,7 @@ function montarNav() {
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("filmora-theme", next); } catch (e) {}
     document.querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", next === "dark" ? "#110f0c" : "#f7f4ef");
+      ?.setAttribute("content", next === "dark" ? "#0a0a0a" : "#ffffff");
   });
 }
 protegido("nav", montarNav);
@@ -35,7 +35,6 @@ function cardVideo(v, i) {
   <article class="vid" data-drive="${v.id}"${v.youtube ? ` data-yt="${v.youtube}"` : ""}${v.video ? ` data-video="${v.video}"` : ""} style="transition-delay:${i * 0.06}s">
     <div class="vid__poster">
       <img src="${v.poster}" alt="${v.titulo}, produção de conteúdo filmora" loading="lazy">
-      ${v.destaque ? '<span class="vid__badge">Destaque</span>' : ""}
       <span class="vid__play" aria-hidden="true">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </span>
@@ -47,15 +46,12 @@ function cardVideo(v, i) {
   </article>`;
 }
 
+/* uma grade só, perfil por perfil: as peças de cada cliente ficam lado a lado */
 function montarGrade() {
-  const destaques = PECAS.filter(v => v.destaque);
-  const demais = PECAS.filter(v => !v.destaque);
+  const perfis = [...new Set(PECAS.map(v => v.perfil))];
+  const ordenadas = [...PECAS].sort((a, b) => perfis.indexOf(a.perfil) - perfis.indexOf(b.perfil));
   $("#conteudoCount").textContent = `${PECAS.length} peças verticais`;
-  $("#conteudoDestaques").innerHTML = destaques.map(cardVideo).join("");
-  $("#conteudoGrid").innerHTML = demais.map(cardVideo).join("");
-  /* sem destaque marcado, o rótulo do bloco ficaria sozinho na página */
-  destaques.length || $("#conteudoDestaques").closest(".conteudo__bloco").remove();
-  demais.length || $("#conteudoGrid").closest(".conteudo__bloco").remove();
+  $("#conteudoGrid").innerHTML = ordenadas.map(cardVideo).join("");
 }
 
 /* ── player em moldura vertical ──
