@@ -231,6 +231,24 @@ em{font-style:italic}
 .album__full em{font-style:normal;color:var(--muted);letter-spacing:.1em}
 .album__full span{transition:transform .35s var(--ease)}
 .album__full:hover span{transform:translateX(4px)}
+/* carrossel: os álbuns seguem para o lado; três por vez, dois no tablet e um
+   com a ponta do próximo aparecendo no celular, para mostrar que tem mais.
+   A margem fica fora da área de rolagem: com ela dentro, o card seguinte
+   aparecia cortado no meio da tela, na linha da margem. */
+.albums.albums--carrossel{grid-template-columns:none;grid-auto-flow:column;
+  grid-auto-columns:calc((100% - 2 * clamp(1rem,2vw,1.8rem)) / 3);
+  padding-inline:0;width:min(calc(var(--maxw) - 2 * clamp(1.2rem,5vw,4rem)),
+    calc(100% - 2 * clamp(1.2rem,5vw,4rem)));
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;overscroll-behavior-x:contain}
+.albums--carrossel::-webkit-scrollbar{display:none}
+.albums--carrossel .album{scroll-snap-align:start}
+.carrossel__nav{max-width:var(--maxw);margin:1.4rem auto 0;padding:0 clamp(1.2rem,5vw,4rem);
+  display:flex;justify-content:flex-end;gap:.6rem}
+.carrossel__btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:none;
+  color:var(--ink);font-size:1.1rem;cursor:pointer;transition:border-color .3s,opacity .3s}
+.carrossel__btn:hover:not(:disabled){border-color:var(--ink)}
+.carrossel__btn:disabled{opacity:.3;cursor:default}
 /* álbum em destaque (casamento): horizontal, cinematográfico */
 .albums--feature{grid-template-columns:1fr}
 .album--feature{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(1.5rem,3vw,3rem);align-items:center}
@@ -456,6 +474,7 @@ em{font-style:italic}
   .services{grid-template-columns:1fr;gap:clamp(2rem,5vw,3rem)}
   .services .cat__head{position:static}
   .albums{grid-template-columns:repeat(2,1fr)}
+  .albums.albums--carrossel{grid-auto-columns:calc((100% - clamp(1rem,2vw,1.8rem)) / 2)}
   .album--feature{grid-template-columns:1fr;gap:1.2rem}
   .album--feature .album__view{position:absolute;left:1.1rem;bottom:1.1rem;color:#ffffff}
   .about__grid{grid-template-columns:1fr 1fr;gap:1.4rem}
@@ -496,6 +515,10 @@ em{font-style:italic}
   .intro__meta{flex-direction:column;gap:1.8rem}
   .masonry{columns:1}
   .albums{grid-template-columns:1fr;gap:1.6rem}
+  /* no celular a fileira vai até a borda da tela: o corte do próximo card
+     fica na borda, onde é natural */
+  .albums.albums--carrossel{grid-auto-columns:82%;gap:1rem;width:100%;
+    padding-inline:clamp(1.2rem,5vw,4rem);scroll-padding-inline:clamp(1.2rem,5vw,4rem)}
   .svc{grid-template-columns:1fr}
   /* o aspect-ratio já define a altura; manter o min-height faria ele ditar a
      LARGURA (170px × 16/10 = 272px) e estourar telas estreitas */

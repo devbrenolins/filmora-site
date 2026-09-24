@@ -67,6 +67,8 @@ const GALERIA = {
   menina:    "festa-menina",
   menino:    "festa-menino",
   cinquenta: "50-anos",
+  aninho:    "1-aninho",
+  adulto:    "aniversario-adulto",
 };
 
 const EVENTOS = [
@@ -92,6 +94,22 @@ const EVENTOS = [
     dir: "assets/eventos/infantil-cowboy",
     galeria: GALERIA.menino,
     imgs: ["cow-002", "cow-009", "cow-012", "cow-001", "cow-000", "cow-005"],
+  },
+  {
+    name: "1 Aninho",
+    tag: "primeiro aniversário",
+    dir: "assets/galerias/1-aninho/full",
+    ext: "webp",
+    galeria: GALERIA.aninho,
+    imgs: ["001", "002", "003", "004", "007", "010"],
+  },
+  {
+    name: "Aniversário Adulto",
+    tag: "festa em vermelho",
+    dir: "assets/galerias/aniversario-adulto/full",
+    ext: "webp",
+    galeria: GALERIA.adulto,
+    imgs: ["001", "002", "005", "006", "007", "008"],
   },
 ];
 const LAYOUT = ["e-a", "e-b", "e-c", "e-d", "e-e", "e-f"];
@@ -168,6 +186,24 @@ function albumCard(id, feature, i = 0) {
 }
 $("#galCasamento").innerHTML = albumCard("cas-rs", true);
 $("#eventsWrap").innerHTML = EVENTOS.map((ev, i) => albumCard(ev.dir, false, i)).join("");
+
+/* aniversários passam para o lado em vez de quebrar em outra fileira */
+function carrossel(trilho, anterior, proximo) {
+  const passo = () => trilho.firstElementChild.getBoundingClientRect().width +
+    parseFloat(getComputedStyle(trilho).columnGap);
+  const atualizar = () => {
+    const fim = trilho.scrollWidth - trilho.clientWidth;
+    anterior.disabled = trilho.scrollLeft <= 2;
+    proximo.disabled = trilho.scrollLeft >= fim - 2;
+    anterior.parentElement.hidden = fim <= 2;
+  };
+  anterior.addEventListener("click", () => trilho.scrollBy({ left: -passo(), behavior: "smooth" }));
+  proximo.addEventListener("click", () => trilho.scrollBy({ left: passo(), behavior: "smooth" }));
+  trilho.addEventListener("scroll", atualizar, { passive: true });
+  addEventListener("resize", atualizar);
+  atualizar();
+}
+carrossel($("#eventsWrap"), $("#eventsPrev"), $("#eventsNext"));
 
 /* seção sem dados sai da página inteira: melhor não existir do que existir vazia */
 function montarSecao(slug, alvo, secao) {

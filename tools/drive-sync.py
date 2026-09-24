@@ -103,6 +103,68 @@ ALBUNS = [
         "pasta": "15ZxHoRF5Zco8euPhFA0UJcsebwClJzn2",     # Aniversários/50
     },
     {
+        "slug": "1-aninho",
+        "titulo": "1 Aninho",
+        "tag": "primeiro aniversário",
+        "descricao": "A galeria do primeiro aniversário do Álvaro, com a família reunida.",
+        "secao": "eventos",
+        "pasta": "1YkrIVN2IKqR7wNhNWjfC4LJvlT5gbm95",     # 1 Aninho - Álvaro
+        # a pasta tem 140; entram 20, com o aniversariante e a família
+        "selecao": [
+            "1jxJOi4hGWdz7QD0XCG4Eud6Ve5Ttg-wi",   # IMG_2869.JPG
+            "1_ZfJIBCzrfgTbTlxuToLaEBO-OW2BrT2",   # IMG_2785.JPG
+            "15xb_E-jjYyJsQVLlNplkuy9EbDt2DCZC",   # IMG_2849.JPG
+            "1zCDVygeePHVPUdaeOTGw4hsc9M7hA1Hx",   # IMG_2794.JPG
+            "12OKW_Tn8VIG0FEw1W-bQB6h4dSmpggS7",   # IMG_2803.JPG
+            "1piaMVVV4Dqf3YMD_PqRz_4xL6Zwk1D04",   # IMG_2807.JPG
+            "1DKraPoXnl1QuqlXXgPWlINvLH_mGu-R6",   # IMG_2872.JPG
+            "1bbQxmrcgxS4gB_Id7afMnJSF_Fz-e3j8",   # IMG_2841.JPG
+            "14qV97XWQL-WIHKUegopgFwtOKjlARMWQ",   # IMG_2802.JPG
+            "1CRsEEzDvydKMt4HtnuTfHbyxkYFaxkqE",   # IMG_2815.JPG
+            "18PNmF1z-bOrztM8S-MOpuQOx4ML4ncFb",   # IMG_2806.JPG
+            "1vJuMjWFUwkzGtgh-KwxLxZ6RzeZ5_ISB",   # IMG_2837.JPG
+            "1tout34ZLQT0z1vhJ_uWPG7GFIHvXSbfa",   # IMG_2889.JPG
+            "1oV03bkDJtHWTJ8TKRdNLgt-CBt0XB4rl",   # IMG_2892.JPG
+            "1Grft79trGwzYEkLN-VAqDTCxMVVcdE4D",   # IMG_2795.JPG
+            "1ixweH_exQ3lT3GgWz1cPKEtLdY7NNGPa",   # IMG_2799.JPG
+            "17rVlfLd9Pjr4A3hDhCavxVoNiXqcCWJs",   # IMG_2811.JPG
+            "1q4J5QaEP7kwsIbLfiO_ycjElO75j1V14",   # IMG_2829.JPG
+            "1yX6Jx4nPN3bgLKUhuZIEu0_MoPia-gjo",   # IMG_2903.JPG
+            "1z0cRKqvVI1mX5nrtqb18wdR-8DkasyjJ",   # IMG_2791.JPG
+        ],
+    },
+    {
+        "slug": "aniversario-adulto",
+        "titulo": "Aniversário Adulto",
+        "tag": "festa em vermelho",
+        "descricao": "A galeria do aniversário da Keila, com a família e os amigos.",
+        "secao": "eventos",
+        "pasta": "19hPdflB4d8NiXdwodzHlRm22mSbPVYB3",     # Keila
+        # a pasta tem 45; entram 20, com a aniversariante e a família
+        "selecao": [
+            "1YCd2UdlmP826Wma6OiQorMJArQmA-FoP",   # 0B1A2128.JPG
+            "1zSW2MNgdNwd8OpM-ybgMTumyoiL5F0k6",   # 0B1A2010.JPG
+            "1HMdaXt0igIrt1AubJZdNJiPrpxDnHOM2",   # 0B1A2067.JPG
+            "1KmTrAVG2BY1fC0Ay8Z0FYZSTsyVP6g_l",   # 0B1A2080.JPG
+            "1D5NgOrA8ifV37_tsSCn96WA7R6jOLRQy",   # 0B1A2122.JPG
+            "1TM5wpAUiF6gzuaylLBPvp9v5HVmkvVkT",   # 0B1A2144.JPG
+            "13ISNIziPaQj0UlAaZfY3WmNv3v20H7SY",   # 0B1A2168.JPG
+            "1hzhFGBuZbmET7DLT7vAORHNM2sUoy1RC",   # 0B1A2182.JPG
+            "1Yfe6oS3QzUvzpgotgjEDw-Nn132uWpbA",   # 0B1A2042.JPG
+            "1PIB78eIOlIoBE_m-4dnt8nhP0mL0bQoJ",   # 0B1A2044.JPG
+            "1qhk7dj_ml8mEyFUxWPwIDEniLB9tSfQB",   # 0B1A2051.JPG
+            "1-x0ZMv5FOPy8_ENiVGYDwY6iWcrYhisD",   # 0B1A2070.JPG
+            "1udWbgtPhxkFmxSriWqhbTczeRkd6ivXQ",   # 0B1A2093.JPG
+            "1DUfv9O20sjCopuL2ITU3-1XNfZmE0kdD",   # 0B1A2133.JPG
+            "1oGhW9lV7XyikwKjIMOdwHN6g1IXTGB8V",   # 0B1A2151.JPG
+            "1zl3KOf5vhV-uJ3G9U6sJl-ggNeedDVmv",   # 0B1A2157.JPG
+            "1OUnO5qe16V7br1PPEUZPAsLaxodr-rGl",   # 0B1A2162.JPG
+            "1X2ED7RrO46GtHE8-PWQqMN-oMjE4QoaG",   # 0B1A2168.JPG
+            "1cqbI17gFRVqVZyjWaCmo5zafRXcvPKiR",   # 0B1A2186.JPG
+            "19BU8-nrGQqbYS2Y-KRfNuySlZcKusYP7",   # 0B1A2196.JPG
+        ],
+    },
+    {
         "slug": "making-of-noiva",
         "titulo": "Making Of da Noiva",
         "tag": "as horas antes do sim",
@@ -638,6 +700,15 @@ def main():
             print(f"  ! {alb['slug']}: nenhuma foto encontrada; a pasta está pública?",
                   file=sys.stderr)
             continue
+        total = len(todas)
+        # álbum com seleção: só as fotos escolhidas, na ordem da lista
+        if alb.get("selecao"):
+            na_pasta = {fid for fid, _ in todas}
+            fora = [fid for fid in alb["selecao"] if fid not in na_pasta]
+            if fora:
+                print(f"  ! {alb['slug']}: {len(fora)} foto(s) da seleção sumiram da pasta",
+                      file=sys.stderr)
+            todas = [(fid, "") for fid in alb["selecao"] if fid in na_pasta]
         # exclui depois de amostrar: tirar uma foto não troca as outras
         itens = [i for i in amostrar(todas, alb.get("limite"))
                  if i[0] not in alb.get("excluir", ())]
@@ -653,7 +724,7 @@ def main():
             "destaque": bool(alb.get("destaque")),
             "fotos": nomes,
         }
-        corte = f" (de {len(todas)})" if len(itens) < len(todas) else ""
+        corte = f" (de {total})" if len(itens) < total else ""
         extra = f" · {novos} baixadas" if novos else " · nada novo"
         if falhas:
             extra += f" · {len(falhas)} FALHARAM"
