@@ -1,1 +1,24 @@
-{}
+{
+  "1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9.mp4": {
+    "id": "1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 347659254,
+    "bytes": 7274132
+  },
+  "1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2.mp4": {
+    "id": "1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2",
+    "ajuste": {
+      "crf": 23,
+      "preset": "slow",
+      "lado": 1280,
+      "audio": 128
+    },
+    "master_bytes": 177553014,
+    "bytes": 4453865
+  }
+}

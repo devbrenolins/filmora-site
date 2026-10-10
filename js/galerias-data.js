@@ -1502,5 +1502,25 @@ window.CONTEUDO = [
     "perfil": "perfil-2",
     "destaque": false,
     "poster": "/assets/conteudo/1TjgyUSaejkWH9mFAwGBbFwq3hD6qxsyq.webp"
+  },
+  {
+    "id": "1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9",
+    "titulo": "Agradecimento de campanha",
+    "tag": "Reels",
+    "youtube": null,
+    "perfil": "perfil-3",
+    "destaque": false,
+    "poster": "/assets/conteudo/1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9.webp",
+    "video": "/assets/conteudo/video/1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9.mp4"
+  },
+  {
+    "id": "1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2",
+    "titulo": "Segundo turno",
+    "tag": "Reels",
+    "youtube": null,
+    "perfil": "perfil-3",
+    "destaque": false,
+    "poster": "/assets/conteudo/1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2.webp",
+    "video": "/assets/conteudo/video/1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2.mp4"
   }
 ];

@@ -210,6 +210,14 @@ VERTICAIS = [
 # quantas peças de cada perfil entram no site (destaques primeiro)
 POR_PERFIL = 2
 
+# Peças verticais que o cliente mandou por link, fora das pastas acima (id do
+# arquivo no Drive). Entram sempre, depois dos lotes, sem contar no POR_PERFIL.
+# O arquivo precisa estar como "qualquer pessoa com o link".
+VERTICAIS_AVULSAS = [
+    {"id": "1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9", "tag": "Reels", "perfil": "perfil-3"},   # IMG_5841.mp4
+    {"id": "1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2", "tag": "Reels", "perfil": "perfil-3"},   # IMG_5843.mp4
+]
+
 # peças que abrem a seção, na ordem
 DESTAQUES = [
     "1yXNzjfwH9d5rTkdtCz-gBuxxSgvjNfCE",   # Quanto o Senhor tem de nós
@@ -243,6 +251,9 @@ TITULOS = {
     "1heRVdlmtIJ7VCf9ag4ajM2ZE3R0zhTzJ": "Milagres",
     "1BPKEpXdbLSq2j6vA2bRi9i1kfou9tqoX": "Salmos",
     "1kRt86EVuJQasTUflWEGGBY68gqWIojNX": "Confiança no Senhor",
+    # avulsas: o arquivo chega com nome de câmera (IMG_5841.mp4)
+    "1xBLa6zNT7Fn0_hbJZujmwFQl1q2BR9n9": "Agradecimento de campanha",
+    "1H2D9mwmu2eUvMHBdms1xQF1N4uAzPb_2": "Segundo turno",
 }
 
 # Os vídeos tocam do YouTube. O Drive segue como origem do pôster e do título;
@@ -794,6 +805,15 @@ def main():
     conteudo = [v2 for v2 in conteudo
                 if por_perfil.setdefault(v2["perfil"], []).append(v2) is None
                 and len(por_perfil[v2["perfil"]]) <= POR_PERFIL]
+    for avulsa in VERTICAIS_AVULSAS:
+        fid = avulsa["id"]
+        conteudo.append({"id": fid,
+                         "titulo": TITULOS.get(fid) or "Reels",
+                         "tag": avulsa["tag"],
+                         "youtube": YOUTUBE.get(fid),
+                         "perfil": avulsa["perfil"],
+                         "destaque": fid in DESTAQUES})
+    print(f"  · verticais avulsas: {len(VERTICAIS_AVULSAS)}", file=sys.stderr)
     faltando = [d for d in DESTAQUES if d not in {v2["id"] for v2 in conteudo}]
     if faltando:
         print(f"  ! destaque(s) fora das pastas verticais: {faltando}", file=sys.stderr)
